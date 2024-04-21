@@ -13,7 +13,7 @@ interface IAvatarProps {
 
 const Avatar: FC<IAvatarProps> = ({ color, name }) => {
     return (
-        <Tooltip title="Add" placement="bottom">
+        <Tooltip title={name} placement="bottom">
             <div className="Avatar" style={{ border: `2px solid ${color}` }}>
                 <SVG width={'35px'} fill={color} src={useAvatar(name)} />
             </div>

@@ -9,6 +9,7 @@ export class User {
     textCursorColumn: number;
     textCursorRow: number;
     color: string;
+    seat: number;
     constructor(socket: string) {
         this.id = socket;
         this.name = Names[Math.floor(Math.random() * 16)];
@@ -18,5 +19,6 @@ export class User {
         this.textCursorColumn = 0;
         this.textCursorRow = 0;
         this.color = '';
+        this.seat = -1;
     }
 }
