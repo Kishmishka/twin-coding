@@ -21,9 +21,7 @@ const OutputSideBar = () => {
     const toggleDrawer = (value: boolean) => () => {
         value && handleCompile();
         setOpenSide(value);
-        console.log('dslkfjsd');
     };
-
     const handleCompile = () => {
         setCompilingProcess(true);
         const formData = {
@@ -35,7 +33,8 @@ const OutputSideBar = () => {
 
         const options = {
             method: 'POST',
-            url: process.env.REACT_APP_RAPID_API_URL,
+
+            url: import.meta.env.VITE_API_URL,
             params: {
                 base64_encoded: 'true',
                 fields: '*',
@@ -43,8 +42,8 @@ const OutputSideBar = () => {
             headers: {
                 'content-type': 'application/json',
                 'Content-Type': 'application/json',
-                'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
-                'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+                'X-RapidAPI-Host': import.meta.env.VITE_API_HOST,
+                'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
             },
             data: formData,
         };
@@ -52,7 +51,6 @@ const OutputSideBar = () => {
         axios
             .request(options)
             .then(function (response) {
-                console.log('res.data', response.data);
                 const token = response.data.token;
                 checkCompilingRezult(token);
             })
@@ -70,11 +68,11 @@ const OutputSideBar = () => {
     const checkCompilingRezult = async (token: string) => {
         const options = {
             method: 'GET',
-            url: process.env.REACT_APP_RAPID_API_URL + '/' + token,
+            url: import.meta.env.VITE_API_URL + '/' + token,
             params: { base64_encoded: 'true', fields: '*' },
             headers: {
-                'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
-                'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+                'X-RapidAPI-Host': import.meta.env.VITE_API_HOST,
+                'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
             },
         };
         try {

@@ -200,7 +200,6 @@ export const useRedactor = create<IRedactorState>(set => ({
         set({ allowСhange: true });
     },
     setRedactorValue: value => {
-        console.log(value);
         set({ redactorValue: value });
     },
     setCursorPosition(x, y) {

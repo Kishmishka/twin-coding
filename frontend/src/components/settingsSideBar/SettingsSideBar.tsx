@@ -26,10 +26,8 @@ export default function SettingsSideBar() {
     const textCursorLabel = useSettingsRedactor(state => state.textCursorLabel);
 
     const toggleDrawer = (open: boolean) => () => {
-        console.log('fds');
         setState(open);
     };
-
     const list = (
         <Box className="SettingsSideBar">
             <div className="SettingsSideBar__container">
