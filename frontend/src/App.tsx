@@ -1,38 +1,57 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 
+import io, { Socket } from 'socket.io-client';
+
+import { useSendLanguage } from './hooks/useSendLanguage.ts';
+import { URLS } from './constants.ts';
+import { useLog, useRedactor } from './store.ts';
+import { useGetServerValue } from './hooks/useGetServerValue.ts';
+import { useSendRedactorValue } from './hooks/useSendRedactorValue.ts';
+import { useSendCursorPosition } from './hooks/useSendCursorPosition.ts';
+import { useSendTextCursorPosition } from './hooks/useSendTextCursorPosition.ts';
+import { useBeforeunload } from 'react-beforeunload';
+import SideBar from './components/sideBar/SideBar.tsx';
+import CodeEditor from './components/codeRedactor/CodeRedactor.tsx';
+import Cursor from './components/cursor/Cursor.tsx';
+
+if (URLS.httpServer == null) URLS.httpServer = '';
+const socket: Socket = io(URLS.httpServer);
+
 function App() {
-    const [count, setCount] = useState(0);
+    const name = useLog(state => state.name);
+    const activeUsers = useLog(state => state.users);
+    const setCursorPosition = useRedactor(state => state.setCursorPosition);
+
+    useGetServerValue(socket);
+
+    useSendRedactorValue(socket);
+    useSendCursorPosition(socket);
+    useSendTextCursorPosition(socket);
+    useSendLanguage(socket);
+
+    useBeforeunload(() => {
+        socket.emit(URLS.disconnect, name);
+    });
 
     return (
-        <>
-            <div>
-                <a href="https://vitejs.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
-                    />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount(count => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
-        </>
+        <div
+            className="App"
+            onMouseMove={e => {
+                setCursorPosition(e.pageX, e.pageY);
+            }}
+        >
+            <SideBar />
+            <CodeEditor />
+            {activeUsers.map(user => (
+                <Cursor
+                    key={user.id}
+                    color={user.color}
+                    x={user.cursorX}
+                    y={user.cursorY}
+                    name={user.name}
+                />
+            ))}
+        </div>
     );
 }
 
