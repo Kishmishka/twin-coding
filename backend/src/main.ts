@@ -14,6 +14,10 @@ import {
     ITextCursor,
     IUser,
 } from './interfaces.ts';
+import DB from './DB.ts';
+
+const db = new DB();
+
 const app = express();
 
 app.use(cors({ origin: '*' }));
@@ -55,7 +59,6 @@ io.on(URLS.connection, socket => {
                 language: languageValue.get(),
             });
 
-            console.log(`${newUser.id} connect`);
             console.log(`${newUser.name} connect`);
         }
     });
@@ -72,7 +75,6 @@ io.on(URLS.connection, socket => {
 
     socket.on(URLS.languageChange, (language: string) => {
         languageValue.set(language);
-        console.log(`${languageValue.get()} 2`);
         socket.broadcast
             .to(URLS.room)
             .emit(URLS.serverLanguage, languageValue.get());
@@ -116,9 +118,6 @@ io.on(URLS.connection, socket => {
                 emptySeats.push(user.seat);
             }
         });
-        emptySeats.forEach((item: number) => {
-            console.log(item);
-        });
         users.set(users.values.filter((user: IUser) => user.id !== socket.id));
         textCursors.set(
             textCursors.values.filter(
@@ -137,4 +136,13 @@ io.on(URLS.connection, socket => {
 server.listen(URLS.port, () => {
     console.log('server run');
     console.log(`port:${URLS.port}`);
+});
+
+app.post(URLS.createRoom, () => {
+    db.createRoom();
+});
+
+app.get(URLS.getRooms, (req, res) => {
+    db.getRooms().then(data => res.send(data));
+    req;
 });

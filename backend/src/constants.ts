@@ -1,7 +1,8 @@
 import { IColors } from './interfaces.ts';
 
 export const URLS = {
-    httpServer: process.env.REACT_APP_URL_SERVER,
+    getRooms: '/getRooms',
+    createRoom: '/createRoom',
     port: 3030,
     connection: 'connection',
     join: 'join',

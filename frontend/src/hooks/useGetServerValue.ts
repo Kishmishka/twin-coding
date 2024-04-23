@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLog, useRedactor, useSettingsRedactor } from '../store';
 import { URLS } from '../constants';
 import { Socket } from 'socket.io-client';
+import Service from '../API/service';
 
 function useGetServerValue(socket: Socket) {
     const setId = useLog(state => state.setId);
@@ -15,6 +16,8 @@ function useGetServerValue(socket: Socket) {
     const setLanguage = useSettingsRedactor(state => state.setLanguage);
 
     useEffect(() => {
+        //   Service.createRoom();
+        Service.getRooms().then(data => console.log(data));
         socket.emit(URLS.join);
         socket.on(URLS.auth, data => {
             setId(data.id);
