@@ -22,6 +22,8 @@ const languageValue = new State('java');
 const textCursors = new Collection();
 const users = new Collection();
 const server = http.createServer(app);
+let lastRequestTime = 0;
+let emptySeats: number[] = [5, 4, 3, 2, 1];
 
 const io = new Server(server, {
     cors: {
@@ -33,32 +35,39 @@ const io = new Server(server, {
 io.on(URLS.connection, socket => {
     console.log('connection established');
     socket.on(URLS.join, () => {
-        const newTextCursor = new TextCursor(socket.id);
-        newTextCursor.className = ColorsTextCursors[textCursors.values.length];
-        textCursors.add(newTextCursor);
+        if (emptySeats.length !== 0) {
+            const newUser = new User(socket.id);
+            newUser.seat = emptySeats.pop() || -1;
+            newUser.color = Colors[newUser.seat];
+            users.add(newUser);
 
-        const newUser = new User(socket.id);
-        newUser.color = Colors[users.values.length];
-        users.add(newUser);
+            const newTextCursor = new TextCursor(socket.id);
+            newTextCursor.className = ColorsTextCursors[newUser.seat];
+            textCursors.add(newTextCursor);
 
-        socket.join(newUser.room);
-        socket.emit(URLS.auth, {
-            id: newUser.id,
-            name: newUser.name,
-            room: newUser.room,
-            color: newUser.color,
-            editorValue: editorValue.get(),
-            language: languageValue.get(),
-        });
-        console.log(`${newUser.id} connect`);
-        console.log(`${newUser.name} connect`);
+            socket.join(newUser.room);
+            socket.emit(URLS.auth, {
+                id: newUser.id,
+                name: newUser.name,
+                room: newUser.room,
+                color: newUser.color,
+                editorValue: editorValue.get(),
+                language: languageValue.get(),
+            });
+
+            console.log(`${newUser.id} connect`);
+            console.log(`${newUser.name} connect`);
+        }
     });
 
     socket.on(URLS.clientValueСhanged, (params: IClientValueСhangedData) => {
         editorValue.set(params.data);
-        setTimeout(() => {
+        const currentTime = Date.now();
+
+        if (currentTime - lastRequestTime > 10) {
             socket.to(URLS.room).emit(URLS.serverValue, editorValue.get());
-        }, 1);
+            lastRequestTime = currentTime;
+        }
     });
 
     socket.on(URLS.languageChange, (language: string) => {
@@ -102,6 +111,14 @@ io.on(URLS.connection, socket => {
     );
 
     socket.on(URLS.disconnect, () => {
+        users.values.forEach((user: IUser) => {
+            if (user.id === socket.id) {
+                emptySeats.push(user.seat);
+            }
+        });
+        emptySeats.forEach((item: number) => {
+            console.log(item);
+        });
         users.set(users.values.filter((user: IUser) => user.id !== socket.id));
         textCursors.set(
             textCursors.values.filter(

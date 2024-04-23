@@ -1,10 +1,10 @@
 export interface IColors {
     [key: string]: string;
-    '0': string;
     '1': string;
     '2': string;
     '3': string;
     '4': string;
+    '5': string;
 }
 export interface IClientValueСhangedData {
     data: string;
@@ -32,6 +32,7 @@ export interface IUser {
     textCursorColumn: number;
     textCursorRow: number;
     color: string;
+    seat: number;
 }
 
 export interface ITextCursor {

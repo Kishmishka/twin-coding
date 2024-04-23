@@ -18,6 +18,7 @@ const SideBar = ({}) => {
         <div className="SideBar">
             <div className="SideBar__content content">
                 <img className="content__img" src={logo} />
+
                 {color !== '' && name !== '' && <Avatar color={color} name={name} />}
                 {users.map(user => (
                     <Avatar color={user.color} name={user.name} />

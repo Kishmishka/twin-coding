@@ -20,19 +20,19 @@ export const URLS = {
 };
 
 export const Colors: IColors = {
-    '0': '#0074E8',
-    '1': '#C8333F',
-    '2': '#B24D9A',
-    '3': '#57B54E',
-    '4': '#31B2A5',
+    '1': '#0074E8',
+    '2': '#C8333F',
+    '3': '#B24D9A',
+    '4': '#57B54E',
+    '5': '#31B2A5',
 };
 
 export const ColorsTextCursors: IColors = {
-    '0': 'TextCursor_blue',
-    '1': 'TextCursor_red',
-    '2': 'TextCursor_violet',
-    '3': 'TextCursor_green',
-    '4': 'TextCursor_turquoise',
+    '1': 'TextCursor_blue',
+    '2': 'TextCursor_red',
+    '3': 'TextCursor_violet',
+    '4': 'TextCursor_green',
+    '5': 'TextCursor_turquoise',
 };
 
 export const Names = [
