@@ -1,22 +1,29 @@
 {
-  "name": "backend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.0.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "globals": "^15.0.0",
-    "prettier": "^3.2.5",
-    "typescript": "^5.2.2",
-    "typescript-eslint": "^7.7.0",
-    "vite": "^5.2.0"
-  }
+    "name": "tc-backend",
+    "private": true,
+    "version": "0.2.0",
+    "type": "module",
+    "scripts": {
+        "start": "npm run build:live",
+        "build": "tsc main.ts",
+        "dev": "npx nodemon"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.0.0",
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.12.7",
+        "cors": "^2.8.5",
+        "eslint": "^8.57.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.1.3",
+        "express": "^4.19.2",
+        "globals": "^15.0.0",
+        "nodemon": "^3.1.0",
+        "prettier": "^3.2.5",
+        "socket.io": "^4.7.5",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.4.5",
+        "typescript-eslint": "^7.7.0",
+        "vite": "^5.2.0"
+    }
 }
