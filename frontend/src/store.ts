@@ -72,7 +72,7 @@ interface ISettingsRedactorState {
 }
 
 export const useSettingsRedactor = create<ISettingsRedactorState>((set, get) => ({
-    language: Languages.java,
+    language: Languages.javaScript,
     tabSize: 3,
     //Флаг выбора темы
     blackTheme: false,
@@ -175,17 +175,18 @@ interface IRedactorState {
     redactorValue: string;
     textCursorPosition: ITextCursorPosition;
     cursorPosition: ICursorPosition;
-    setStartRedactorValue: (value: string) => void;
+    //  setStartRedactorValue: (value: string) => void;
     setRedactorValue: (value: string) => void;
     setCursorPosition: (x: number, y: number) => void;
     setTextCursorPosition: (x: number, y: number) => void;
+    setAllowChange: (alowchange: boolean) => void;
 }
 
 export const useRedactor = create<IRedactorState>(set => ({
     //Флаг разрещающий изменения состояния текста
     allowСhange: false,
     //Значение текстового редактора
-    redactorValue: Languages.java.startPattern,
+    redactorValue: '',
     textCursorPosition: {
         column: 0,
         row: 0,
@@ -194,11 +195,13 @@ export const useRedactor = create<IRedactorState>(set => ({
         X: 0,
         Y: 0,
     },
-
-    setStartRedactorValue: value => {
-        if (value) set({ redactorValue: value });
-        set({ allowСhange: true });
+    setAllowChange: value => {
+        set({ allowСhange: value });
     },
+    //  setStartRedactorValue: value => {
+    //      if (value) set({ redactorValue: value });
+    //      set({ allowСhange: true });
+    //  },
     setRedactorValue: value => {
         set({ redactorValue: value });
     },

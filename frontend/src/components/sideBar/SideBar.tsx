@@ -1,3 +1,4 @@
+import { IconButton } from '@mui/material';
 import logo from '../../img/logo.svg';
 import { useLog, useSettingsRedactor } from '../../store';
 import MySwitch from '../MUI/MySwith.tsx';
@@ -5,6 +6,8 @@ import Avatar from '../avatar/Avatar.tsx';
 import OutputSideBar from '../outputSideBar/OutputSideBar.tsx';
 import SettingsSideBar from '../settingsSideBar/SettingsSideBar.tsx';
 import './SideBar.scss';
+import ShareLink from '../shareLink/ShareLink.tsx';
+
 //Компонент отвечающий за отрисовку боковой панели
 //Используется в компоненте App.js
 const SideBar = ({}) => {
@@ -25,6 +28,7 @@ const SideBar = ({}) => {
                 ))}
             </div>
             <div className="SideBar__settings">
+                <ShareLink />
                 <OutputSideBar />
                 <SettingsSideBar />
                 <MySwitch

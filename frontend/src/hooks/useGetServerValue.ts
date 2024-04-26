@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useLog, useRedactor, useSettingsRedactor } from '../store';
 import { URLS } from '../constants';
 import { Socket } from 'socket.io-client';
-import Service from '../API/service';
+import { useSearchParams } from 'react-router-dom';
 
 function useGetServerValue(socket: Socket) {
     const setId = useLog(state => state.setId);
@@ -12,20 +12,26 @@ function useGetServerValue(socket: Socket) {
     const setUsers = useLog(state => state.setUsers);
     const setMarkers = useLog(state => state.setMarkers);
     const setRedactorValue = useRedactor(state => state.setRedactorValue);
-    const setStartRedactorValue = useRedactor(state => state.setStartRedactorValue);
+    const setAllowChange = useRedactor(state => state.setAllowChange);
+    //  const setStartRedactorValue = useRedactor(state => state.setStartRedactorValue);
     const setLanguage = useSettingsRedactor(state => state.setLanguage);
+    const [searchParams] = useSearchParams();
 
+    const room = searchParams.get('room');
     useEffect(() => {
-        //   Service.createRoom();
-        Service.getRooms().then(data => console.log(data));
-        socket.emit(URLS.join);
+        if (room === null) {
+            socket.emit(URLS.joinNewRoom);
+        } else {
+            socket.emit(URLS.joinExistingRoom, room);
+        }
         socket.on(URLS.auth, data => {
+            setAllowChange(false);
             setId(data.id);
             setName(data.name);
             setRoom(data.room);
-            setColor(data.color);
             setLanguage(data.language);
-            setStartRedactorValue(data.editorValue);
+            setColor(data.color);
+            setRedactorValue(data.editorValue);
         });
 
         socket.on(URLS.serverValue, editorValue => {

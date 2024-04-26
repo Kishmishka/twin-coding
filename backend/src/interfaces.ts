@@ -44,3 +44,10 @@ export interface ITextCursor {
     type: string;
     id: string;
 }
+
+export interface IRoomParams {
+    id: number;
+    language: string;
+    editorContent: string;
+    seatsCount: number;
+}

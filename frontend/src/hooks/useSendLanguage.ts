@@ -8,11 +8,13 @@ function useSendLanguage(socket: Socket) {
     const language = useSettingsRedactor(state => state.language);
     const allowСhange = useRedactor(state => state.allowСhange);
     const setRedactorValue = useRedactor(state => state.setRedactorValue);
+    const setAllowChange = useRedactor(state => state.setAllowChange);
     useEffect(() => {
         if (allowСhange) {
             socket.emit(URLS.languageChange, language.name);
             setRedactorValue(language.startPattern);
         }
     }, [language]);
+    setAllowChange(true);
 }
 export { useSendLanguage };
