@@ -1,6 +1,7 @@
 import { IColors } from './interfaces.ts';
 
 export const URLS = {
+    saveChange: '/saveChange',
     getRooms: '/getRooms',
     createRoom: '/createRoom',
     port: 4040,

@@ -15,10 +15,11 @@ function useGetServerValue(socket: Socket) {
     const setAllowChange = useRedactor(state => state.setAllowChange);
     //  const setStartRedactorValue = useRedactor(state => state.setStartRedactorValue);
     const setLanguage = useSettingsRedactor(state => state.setLanguage);
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const room = searchParams.get('room');
     useEffect(() => {
+        console.log(room);
         if (room === null) {
             socket.emit(URLS.joinNewRoom);
         } else {

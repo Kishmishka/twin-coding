@@ -7,6 +7,7 @@ import OutputSideBar from '../outputSideBar/OutputSideBar.tsx';
 import SettingsSideBar from '../settingsSideBar/SettingsSideBar.tsx';
 import './SideBar.scss';
 import ShareLink from '../shareLink/ShareLink.tsx';
+import SaveChange from '../saveChange/SaveChange.tsx';
 
 //Компонент отвечающий за отрисовку боковой панели
 //Используется в компоненте App.js
@@ -28,6 +29,7 @@ const SideBar = ({}) => {
                 ))}
             </div>
             <div className="SideBar__settings">
+                <SaveChange />
                 <ShareLink />
                 <OutputSideBar />
                 <SettingsSideBar />

@@ -73,7 +73,7 @@ io.on(URLS.connection, socket => {
         const params: Promise<IRoomParams> = db.getRoomParams(
             Number(URLS.room),
         );
-        params.then(() => {
+        params.then(data => {
             if (emptySeats.length > 0) {
                 const newUser = new User(socket.id);
                 newUser.seat = emptySeats.pop() || 0;
@@ -85,7 +85,9 @@ io.on(URLS.connection, socket => {
                 textCursors.add(newTextCursor);
 
                 socket.join(URLS.room);
-                console.log(languageValue.get());
+                //  editorValue.set(data.editorContent);
+                //  languageValue.set(data.language);
+                console.log(data);
 
                 socket.emit(URLS.auth, {
                     id: newUser.id,
@@ -186,7 +188,21 @@ app.post(URLS.createRoom, () => {
     db.createRoom();
 });
 
-app.get(URLS.getRooms, (req, res) => {
+app.get(URLS.getRooms, (_req, res) => {
     db.getRooms().then(data => res.send(data));
-    req;
+});
+
+app.post(URLS.saveChange, (_req, res) => {
+    //  db.updateRoomParams({
+    //      id: Number(URLS.room),
+    //      language: languageValue.get(),
+    //      editorContent: editorValue.get(),
+    //      seatsCount: 5,
+    //  });
+    const params = db.getRoomParams(Number(URLS.room));
+    params.then(data => {
+        languageValue.set(data.language);
+        editorValue.set(data.editorContent);
+        res.send('reload');
+    });
 });
