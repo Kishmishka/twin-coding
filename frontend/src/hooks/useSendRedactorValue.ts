@@ -11,9 +11,9 @@ function useSendRedactorValue(socket: Socket) {
 
     useEffect(() => {
         const params = {
+            name,
+            room,
             data: redactorValue,
-            name: name,
-            room: room,
         };
 
         if (allowСhange) {

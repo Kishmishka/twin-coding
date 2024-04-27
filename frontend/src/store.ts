@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { CompilingStatus, Languages } from './constants';
 import { ICursorPosition, ILanguage, IMarker, ITextCursorPosition, IUser } from './interfaces';
-import { Socket } from 'socket.io-client';
 
 //Значения компиляции
 //Используется в компоненте OutputSideBar.jsx
@@ -10,7 +9,7 @@ interface ICompilingState {
     compilingProcess: boolean;
     setCompilingOutputManyReques: () => void;
     setCompilingOutput: (responseCompiling: any) => void;
-    setCompilingProcess: (value: boolean) => void;
+    setCompilingProcess: (compilingProcess: boolean) => void;
 }
 
 export const useCompiling = create<ICompilingState>((set, get) => ({
@@ -21,8 +20,7 @@ export const useCompiling = create<ICompilingState>((set, get) => ({
 
     setCompilingOutputManyReques: () => {
         set({
-            compilingOutput:
-                get().compilingOutput + '\n' + 'Quota of 50 requests exceeded for the Day!',
+            compilingOutput: get().compilingOutput + '\n' + 'Quota of 50 requests exceeded for the Day!',
         });
     },
     setCompilingOutput: responseCompiling => {
@@ -47,8 +45,8 @@ export const useCompiling = create<ICompilingState>((set, get) => ({
                     : `error: ${atob(responseCompiling?.stderr)}`),
         });
     },
-    setCompilingProcess: value => {
-        set({ compilingProcess: value });
+    setCompilingProcess: compilingProcess => {
+        set({ compilingProcess });
     },
 }));
 
@@ -65,9 +63,9 @@ interface ISettingsRedactorState {
     cursorLabel: boolean;
     textCursorLabel: boolean;
     setLanguage: (value: string) => void;
-    setTabSize: (value: number) => void;
+    setTabSize: (tabSize: number) => void;
     swapblackTheme: () => void;
-    setCursorLabel: (value: boolean) => void;
+    setCursorLabel: (cursorLabel: boolean) => void;
     swapCursorLabel: () => void;
     swapTextCursorLabel: () => void;
 }
@@ -95,14 +93,14 @@ export const useSettingsRedactor = create<ISettingsRedactorState>((set, get) => 
                 break;
         }
     },
-    setTabSize: value => {
-        set({ tabSize: value });
+    setTabSize: tabSize => {
+        set({ tabSize });
     },
     swapblackTheme: () => {
         set({ blackTheme: !get().blackTheme });
     },
-    setCursorLabel: value => {
-        set({ cursorLabel: value });
+    setCursorLabel: cursorLabel => {
+        set({ cursorLabel });
     },
     swapCursorLabel: () => {
         set({ cursorLabel: !get().cursorLabel });
@@ -128,7 +126,7 @@ interface ILogState {
     markers: IMarker[];
     setMarkers: (value: IMarker[]) => void;
     setUsers: (value: IUser[]) => void;
-    setId: (value: string) => void;
+    setId: (id: string) => void;
     setName: (value: string) => void;
     setRoom: (value: number) => void;
     setColor: (value: string) => void;
@@ -144,23 +142,23 @@ export const useLog = create<ILogState>((set, get) => ({
 
     setMarkers(value) {
         const markers = value.filter(marker => marker.id !== get().id);
-        set({ markers: markers });
+        set({ markers });
     },
     setUsers(value) {
         const users = value.filter(user => user.id !== get().id);
-        set({ users: users });
+        set({ users });
     },
-    setId: value => {
-        set({ id: value });
+    setId: id => {
+        set({ id });
     },
-    setName: value => {
-        set({ name: value });
+    setName: name => {
+        set({ name });
     },
-    setRoom: value => {
-        set({ room: value });
+    setRoom: room => {
+        set({ room });
     },
-    setColor: value => {
-        set({ color: value });
+    setColor: color => {
+        set({ color });
     },
 }));
 
@@ -196,15 +194,15 @@ export const useRedactor = create<IRedactorState>(set => ({
         X: 0,
         Y: 0,
     },
-    setAllowChange: value => {
-        set({ allowСhange: value });
+    setAllowChange: allowСhange => {
+        set({ allowСhange });
     },
     //  setStartRedactorValue: value => {
     //      if (value) set({ redactorValue: value });
     //      set({ allowСhange: true });
     //  },
-    setRedactorValue: value => {
-        set({ redactorValue: value });
+    setRedactorValue: redactorValue => {
+        set({ redactorValue });
     },
     setCursorPosition(x, y) {
         set({ cursorPosition: { X: x, Y: y } });

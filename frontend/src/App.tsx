@@ -14,8 +14,7 @@ import SideBar from './components/sideBar/SideBar.tsx';
 import CodeEditor from './components/codeRedactor/CodeRedactor.tsx';
 import Cursor from './components/cursor/Cursor.tsx';
 
-if (URLS.httpServer === null) URLS.httpServer = '';
-const socket: Socket = io(URLS.httpServer);
+const socket: Socket = io(URLS.httpServer + URLS.portServer);
 
 function App() {
     const name = useLog(state => state.name);
@@ -42,13 +41,7 @@ function App() {
             <SideBar />
             <CodeEditor />
             {activeUsers.map(user => (
-                <Cursor
-                    key={user.id}
-                    color={user.color}
-                    x={user.cursorX}
-                    y={user.cursorY}
-                    name={user.name}
-                />
+                <Cursor key={user.id} color={user.color} x={user.cursorX} y={user.cursorY} name={user.name} />
             ))}
         </div>
     );

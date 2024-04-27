@@ -9,7 +9,7 @@ function useSendTextCursorPosition(socket: Socket) {
 
     useEffect(() => {
         const textCursor = {
-            id: id,
+            id,
             column: textCursorPosition.column,
             row: textCursorPosition.row,
         };

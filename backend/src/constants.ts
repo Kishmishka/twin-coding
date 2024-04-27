@@ -1,10 +1,14 @@
 import { IColors } from './interfaces.ts';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const URLS = {
+    httpServer: process.env.VITE_URL_SERVER,
+    portServer: process.env.VITE_PORT_SERVER,
+    portClient: process.env.VITE_PORT_CLIENT,
     saveChange: '/saveChange',
     getRooms: '/getRooms',
     createRoom: '/createRoom',
-    port: 4040,
     room: '0',
     connection: 'connection',
     joinNewRoom: 'joinNewRoom',

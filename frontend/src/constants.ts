@@ -34,9 +34,13 @@ export const Languages = {
 };
 
 export const URLS = {
-    update: 'update',
     httpServer: import.meta.env.VITE_URL_SERVER,
-    port: 4040,
+    portServer: import.meta.env.VITE_PORT_SERVER,
+    portClient: import.meta.env.VITE_PORT_CLIENT,
+    saveChange: '/saveChange',
+    getRooms: '/getRooms',
+    createRoom: '/createRoom',
+    update: 'update',
     connection: 'connection',
     joinNewRoom: 'joinNewRoom',
     joinExistingRoom: 'joinExistingRoom',

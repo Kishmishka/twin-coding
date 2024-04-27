@@ -1,20 +1,17 @@
 import axios from 'axios';
-const instans = axios.create({
-    baseURL: 'http://localhost:4040',
+import {URLS} from '../constants';
+const instanse = axios.create({
+    baseURL: URLS.httpServer + URLS.portServer,
     timeout: 1000,
 });
 export default class Service {
     static async createRoom() {
-        const response = instans.post('/createRoom');
-        return response;
+        return instanse.post(URLS.createRoom);
     }
-
     static async getRooms() {
-        const response = instans.get('/getRooms');
-        return response;
+        return instanse.get(URLS.getRooms);
     }
     static async saveChange() {
-        const response = instans.post('/saveChange');
-        return response;
+        return instanse.post(URLS.saveChange);
     }
 }

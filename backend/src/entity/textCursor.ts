@@ -6,6 +6,7 @@ export class TextCursor {
     className: string;
     type: string;
     id: string;
+
     constructor(id: string) {
         this.id = id;
         this.startRow = 0;

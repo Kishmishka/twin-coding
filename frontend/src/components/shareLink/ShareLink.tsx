@@ -8,13 +8,14 @@ import {
     IconButton,
 } from '@mui/material';
 import React from 'react';
-import { useLog } from '../../store';
+import {useLog} from '../../store';
 import share from '../../img/share.svg';
-import './ShareLink.scss';
+import {URLS} from '../../constants';
 
 const ShareLink = () => {
     const [open, setOpen] = React.useState(false);
     const room = useLog(state => state.room);
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -22,9 +23,10 @@ const ShareLink = () => {
     const handleClose = () => {
         setOpen(false);
     };
+
     return (
         <>
-            <IconButton onClick={handleClickOpen} aria-label="delete" sx={{ color: 'white' }}>
+            <IconButton onClick={handleClickOpen} aria-label="delete" sx={{color: 'white'}}>
                 <img width={'30px'} src={share} />
             </IconButton>
             <Dialog
@@ -33,14 +35,20 @@ const ShareLink = () => {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <div className="dialogWindow">
+                <div style={{backgroundColor: '#232323', color: 'white'}}>
                     <DialogTitle id="alert-dialog-title">{'link to your room'}</DialogTitle>
                     <DialogContent>
                         <DialogContentText
-                            className="dialogWindow__description"
-                            sx={{ color: '#CDA85F', fontSize: '18px' }}
+                            sx={{
+                                color: '#E7E7E7',
+                                fontSize: '18px',
+                                backgroundColor: '#3b3b3b',
+                                padding: '3px 8px',
+                                borderRadius: '7px',
+                            }}
                         >
-                            http://localhost:5173/?room={room}
+                            {URLS.httpServer}
+                            {URLS.portClient}/?room={room}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

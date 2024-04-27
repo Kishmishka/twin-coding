@@ -1,4 +1,3 @@
-import { IconButton } from '@mui/material';
 import logo from '../../img/logo.svg';
 import { useLog, useSettingsRedactor } from '../../store';
 import MySwitch from '../MUI/MySwith.tsx';
@@ -11,7 +10,7 @@ import SaveChange from '../saveChange/SaveChange.tsx';
 
 //Компонент отвечающий за отрисовку боковой панели
 //Используется в компоненте App.js
-const SideBar = ({}) => {
+const SideBar = () => {
     const blackTheme = useSettingsRedactor(state => state.blackTheme);
     const swapblackTheme = useSettingsRedactor(state => state.swapblackTheme);
     const users = useLog(state => state.users);
