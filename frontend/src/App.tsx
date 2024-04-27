@@ -14,7 +14,7 @@ import SideBar from './components/sideBar/SideBar.tsx';
 import CodeEditor from './components/codeRedactor/CodeRedactor.tsx';
 import Cursor from './components/cursor/Cursor.tsx';
 
-if (URLS.httpServer == null) URLS.httpServer = '';
+if (URLS.httpServer === null) URLS.httpServer = '';
 const socket: Socket = io(URLS.httpServer);
 
 function App() {
@@ -23,7 +23,6 @@ function App() {
     const setCursorPosition = useRedactor(state => state.setCursorPosition);
 
     useGetServerValue(socket);
-
     useSendRedactorValue(socket);
     useSendCursorPosition(socket);
     useSendTextCursorPosition(socket);

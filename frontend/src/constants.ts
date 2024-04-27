@@ -34,7 +34,7 @@ export const Languages = {
 };
 
 export const URLS = {
-    synchronizeChanges: 'synchronizeChanges',
+    update: 'update',
     httpServer: import.meta.env.VITE_URL_SERVER,
     port: 4040,
     connection: 'connection',

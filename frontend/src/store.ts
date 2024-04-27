@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { CompilingStatus, Languages } from './constants';
 import { ICursorPosition, ILanguage, IMarker, ITextCursorPosition, IUser } from './interfaces';
+import { Socket } from 'socket.io-client';
 
 //Значения компиляции
 //Используется в компоненте OutputSideBar.jsx
