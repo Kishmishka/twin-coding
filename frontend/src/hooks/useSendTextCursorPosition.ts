@@ -3,9 +3,9 @@ import { useLog, useRedactor } from '../store';
 import { useEffect } from 'react';
 import { URLS } from '../constants';
 
-function useSendTextCursorPosition(socket: Socket) {
-    const id = useLog(state => state.id);
-    const textCursorPosition = useRedactor(state => state.textCursorPosition);
+export default function useSendTextCursorPosition(socket: Socket) {
+    const id = useLog((state) => state.id);
+    const textCursorPosition = useRedactor((state) => state.textCursorPosition);
 
     useEffect(() => {
         const textCursor = {
@@ -17,4 +17,3 @@ function useSendTextCursorPosition(socket: Socket) {
         socket.emit(URLS.positionTextCursorChange, textCursor);
     }, [textCursorPosition]);
 }
-export { useSendTextCursorPosition };

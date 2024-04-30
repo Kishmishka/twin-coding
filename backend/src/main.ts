@@ -1,12 +1,12 @@
 import express from 'express';
 import http from 'http';
-import {Server} from 'socket.io';
+import { Server } from 'socket.io';
 import cors from 'cors';
-import {URLS, Colors, ColorsTextCursors} from './constants.ts';
-import {User} from './entity/user.ts';
-import {State} from './entity/state.ts';
-import {Collection} from './entity/collection.ts';
-import {TextCursor} from './entity/textCursor.ts';
+import { URLS, COLORS, COLORS_TEXT_CURSORS } from './constants.ts';
+import User from './entity/User.ts';
+import State from './entity/State.ts';
+import Collection from './entity/Collection.ts';
+import TextCursor from './entity/TextCursor.ts';
 import {
     IClientValueСhangedData,
     IPositionCursorChangeData,
@@ -15,11 +15,11 @@ import {
     ITextCursor,
     IUser,
 } from './interfaces.ts';
-import DB from './DB.ts';
+import dataBase from './dataBase.ts';
 
-const db = new DB();
+const db = new dataBase();
 const app = express();
-app.use(cors({origin: '*'}));
+app.use(cors({ origin: '*' }));
 
 const editorValue = new State('');
 const languageValue = new State('Java script');
@@ -38,20 +38,20 @@ const io = new Server(server, {
     },
 });
 
-io.on(URLS.connection, socket => {
+io.on(URLS.connection, (socket) => {
     console.log('connection established');
 
     socket.on(URLS.joinNewRoom, () => {
-        db.createRoom().then(data => {
+        db.createRoom().then((data) => {
             URLS.room = String(data.id);
 
             const newUser = new User(socket.id);
             newUser.seat = emptySeats.pop() || 0;
-            newUser.color = Colors[newUser.seat];
+            newUser.color = COLORS[newUser.seat];
             users.add(newUser);
 
             const newTextCursor = new TextCursor(socket.id);
-            newTextCursor.className = ColorsTextCursors[newUser.seat];
+            newTextCursor.className = COLORS_TEXT_CURSORS[newUser.seat];
             textCursors.add(newTextCursor);
 
             socket.join(URLS.room);
@@ -78,11 +78,11 @@ io.on(URLS.connection, socket => {
             if (emptySeats.length > 0) {
                 const newUser = new User(socket.id);
                 newUser.seat = emptySeats.pop() || 0;
-                newUser.color = Colors[newUser.seat];
+                newUser.color = COLORS[newUser.seat];
                 users.add(newUser);
 
                 const newTextCursor = new TextCursor(socket.id);
-                newTextCursor.className = ColorsTextCursors[newUser.seat];
+                newTextCursor.className = COLORS_TEXT_CURSORS[newUser.seat];
                 textCursors.add(newTextCursor);
 
                 socket.join(URLS.room);
@@ -182,14 +182,14 @@ app.post(URLS.createRoom, () => {
 });
 
 app.get(URLS.getRooms, (_req, res) => {
-    db.getRooms().then(data => res.send(data));
+    db.getRooms().then((data) => res.send(data));
 });
 
 app.post(URLS.saveChange, (_req, res) => {
     const params = db.getRoomParams(Number(URLS.room));
-    params.then(data => {
+    params.then((data) => {
         languageValue.set(data.language);
         editorValue.set(data.editorContent);
-        res.send({languageValue, editorValue});
+        res.send({ languageValue, editorValue });
     });
 });

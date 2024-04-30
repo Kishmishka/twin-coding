@@ -1,4 +1,4 @@
-export class TextCursor {
+export default class TextCursor {
     startRow: number;
     startCol: number;
     endRow: number;

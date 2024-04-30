@@ -1,7 +1,7 @@
 import {PrismaClient} from '@prisma/client';
 import {IRoomParams} from './interfaces';
 
-export default class DB {
+export default class dataBase {
     prisma: PrismaClient;
 
     constructor() {

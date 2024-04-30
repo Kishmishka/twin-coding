@@ -16,7 +16,7 @@ import duck from '../img/avatars/duck.svg';
 import sheep from '../img/avatars/sheep.svg';
 
 // Пользовательский хук служащий для отрисовки автатарки по имени пользователя
-function useAvatar(name: string) {
+export default function useAvatar(name: string) {
     switch (name) {
         case 'Загорелый пингвин':
             return penguin;
@@ -54,5 +54,3 @@ function useAvatar(name: string) {
             return '';
     }
 }
-
-export { useAvatar };

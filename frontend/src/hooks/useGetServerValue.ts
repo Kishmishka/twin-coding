@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
-import { useLog, useRedactor, useSettingsRedactor } from '../store';
-import { URLS } from '../constants';
-import { Socket } from 'socket.io-client';
-import { useSearchParams } from 'react-router-dom';
+import {useEffect} from 'react';
+import {useLog, useRedactor, useSettingsRedactor} from '../store';
+import {URLS} from '../constants';
+import {Socket} from 'socket.io-client';
+import {useSearchParams} from 'react-router-dom';
 
-function useGetServerValue(socket: Socket) {
+export default function useGetServerValue(socket: Socket) {
     const setId = useLog(state => state.setId);
     const setName = useLog(state => state.setName);
     const setRoom = useLog(state => state.setRoom);
@@ -13,12 +13,11 @@ function useGetServerValue(socket: Socket) {
     const setMarkers = useLog(state => state.setMarkers);
     const setRedactorValue = useRedactor(state => state.setRedactorValue);
     const setAllowChange = useRedactor(state => state.setAllowChange);
-    //  const setStartRedactorValue = useRedactor(state => state.setStartRedactorValue);
     const setLanguage = useSettingsRedactor(state => state.setLanguage);
     const [searchParams] = useSearchParams();
 
     const room = searchParams.get('room');
-	 
+
     useEffect(() => {
         if (room === null) {
             socket.emit(URLS.joinNewRoom);
@@ -58,4 +57,3 @@ function useGetServerValue(socket: Socket) {
         });
     }, []);
 }
-export { useGetServerValue };

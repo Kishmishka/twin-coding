@@ -3,7 +3,7 @@ import {useLog, useRedactor} from '../store';
 import {URLS} from '../constants';
 import {Socket} from 'socket.io-client';
 
-function useSendCursorPosition(socket: Socket) {
+export default function useSendCursorPosition(socket: Socket) {
     const id = useLog(state => state.id);
     const cursorPosition = useRedactor(state => state.cursorPosition);
 
@@ -17,4 +17,3 @@ function useSendCursorPosition(socket: Socket) {
         socket.emit(URLS.positionCursorChange, cursor);
     }, [cursorPosition]);
 }
-export {useSendCursorPosition};

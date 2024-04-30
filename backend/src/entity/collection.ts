@@ -1,4 +1,4 @@
-export class Collection {
+export default class Collection {
     values: any = [];
 
     add(value: any) {

@@ -1,6 +1,6 @@
-import {Names} from '../constants.ts';
+import { Names } from '../constants.ts';
 
-export class User {
+export default class User {
     id: string;
     name: string;
     room: number;

@@ -1,17 +1,17 @@
-import {IconButton, Snackbar} from '@mui/material';
+import { IconButton, Snackbar } from '@mui/material';
 import cloud from '../../img/cloud.svg';
-import {useState} from 'react';
+import { useState } from 'react';
 import Service from '../../API/service';
-import {useRedactor, useSettingsRedactor} from '../../store';
+import { useRedactor, useSettingsRedactor } from '../../store';
 
 const SaveChange = () => {
     const [open, setOpen] = useState<boolean>(false);
-    const setRedactorValue = useRedactor(state => state.setRedactorValue);
-    const setLanguage = useSettingsRedactor(state => state.setLanguage);
-    const setAllowChange = useRedactor(state => state.setAllowChange);
+    const setRedactorValue = useRedactor((state) => state.setRedactorValue);
+    const setLanguage = useSettingsRedactor((state) => state.setLanguage);
+    const setAllowChange = useRedactor((state) => state.setAllowChange);
     const handleClick = () => {
         setOpen(true);
-        Service.saveChange().then(data => {
+        Service.saveChange().then((data) => {
             setAllowChange(false);
             setLanguage(data.data.languageValue.value);
             setRedactorValue(data.data.editorValue.value);
@@ -20,11 +20,11 @@ const SaveChange = () => {
 
     return (
         <div>
-            <IconButton onClick={handleClick} aria-label="delete" sx={{color: 'white'}}>
+            <IconButton onClick={handleClick} aria-label="delete" sx={{ color: 'white' }}>
                 <img width={'30px'} src={cloud} />
             </IconButton>
             <Snackbar
-                anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 open={open}
                 onClose={() => {
                     setOpen(false);

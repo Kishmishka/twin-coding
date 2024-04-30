@@ -1,4 +1,4 @@
-export class State {
+export default class State {
     value: string;
 
     constructor(startValue: string) {
