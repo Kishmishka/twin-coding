@@ -1,7 +1,7 @@
-import {PrismaClient} from '@prisma/client';
-import {IRoomParams} from './interfaces';
+import { PrismaClient } from '@prisma/client';
+import { IRoomParams } from './interfaces';
 
-export default class dataBase {
+export default class DataBase {
     prisma: PrismaClient;
 
     constructor() {
@@ -32,7 +32,7 @@ export default class dataBase {
             editorContent: '',
             seatsCount: 5,
         };
-        const res = await this.prisma.room.findUnique({where: {id}});
+        const res = await this.prisma.room.findUnique({ where: { id } });
         if (res) {
             return res;
         } else {
@@ -42,7 +42,7 @@ export default class dataBase {
 
     public async updateRoomParams(roomParams: IRoomParams) {
         return await this.prisma.room.update({
-            where: {id: roomParams.id},
+            where: { id: roomParams.id },
             data: {
                 language: roomParams.language,
                 editorContent: roomParams.editorContent,
@@ -52,7 +52,7 @@ export default class dataBase {
 
     public async updateSeatsCount(count: number, room: number) {
         return await this.prisma.room.update({
-            where: {id: room},
+            where: { id: room },
             data: {
                 seatsCount: count,
             },

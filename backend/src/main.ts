@@ -15,9 +15,9 @@ import {
     ITextCursor,
     IUser,
 } from './interfaces.ts';
-import dataBase from './dataBase.ts';
+import DataBase from './DataBase.ts';
 
-const db = new dataBase();
+const db = new DataBase();
 const app = express();
 app.use(cors({ origin: '*' }));
 

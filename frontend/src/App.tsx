@@ -11,7 +11,7 @@ import useSendCursorPosition from './hooks/useSendCursorPosition.ts';
 import useSendTextCursorPosition from './hooks/useSendTextCursorPosition.ts';
 import { useBeforeunload } from 'react-beforeunload';
 import SideBar from './components/SideBar/SideBar.tsx';
-import CodeEditor from './components/CodeRedactor/CodeRedactor.tsx';
+import CodeRedactor from './components/CodeRedactor/CodeRedactor.tsx';
 import Cursor from './components/Cursor/Cursor.tsx';
 
 const socket: Socket = io(URLS.httpServer + URLS.portServer);
@@ -39,7 +39,7 @@ function App() {
             }}
         >
             <SideBar />
-            <CodeEditor />
+            <CodeRedactor />
             {activeUsers.map((user) => (
                 <Cursor
                     key={user.id}
