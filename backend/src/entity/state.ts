@@ -1,5 +1,6 @@
-export class State {
+export default class State {
     value: string;
+
     constructor(startValue: string) {
         this.value = startValue;
     }
@@ -7,6 +8,7 @@ export class State {
     set(newValue: string) {
         this.value = newValue;
     }
+
     get() {
         return this.value;
     }

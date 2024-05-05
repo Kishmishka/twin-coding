@@ -6,9 +6,9 @@ import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/theme-tomorrow';
 import 'ace-builds/src-noconflict/theme-twilight';
 import 'ace-builds/src-noconflict/ext-language_tools';
-import { useLog, useRedactor, useSettingsRedactor } from '../../store';
+import {useLog, useRedactor, useSettingsRedactor} from '../../store';
 import './CodeRedactor.scss';
-import { Languages } from '../../constants';
+import {Languages} from '../../constants';
 
 //Компонент редактора кода с натройками
 //npm react-ace
@@ -22,9 +22,10 @@ const CodeEditor = () => {
     const setTextCursorPosition = useRedactor(state => state.setTextCursorPosition);
     const markers = useLog(state => state.markers);
     const textCursorLabel = useSettingsRedactor(state => state.textCursorLabel);
+
     return (
         <AceEditor
-            style={{ position: 'relative', zIndex: 2 }}
+            style={{position: 'relative', zIndex: 2}}
             mode={language.value || Languages.java.value}
             value={redactorValue}
             placeholder="good luck)"

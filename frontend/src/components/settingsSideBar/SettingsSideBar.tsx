@@ -3,13 +3,13 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import { FormControlLabel, IconButton, Switch } from '@mui/material';
+import {FormControlLabel, IconButton, Switch} from '@mui/material';
 import Menu from '../MUI/Menu';
-import { useSettingsRedactor } from '../../store';
+import {useSettingsRedactor} from '../../store';
 import settings from '../../img/settings.svg';
 import MySlider from '../MUI/MySlider';
 import './SettingsSideBar.scss';
-import { Languages } from '../../constants';
+import {Languages} from '../../constants';
 
 //Выпадающее меню настроек редактора
 //Задействован в компоненте SideBar.jsx
@@ -28,6 +28,7 @@ export default function SettingsSideBar() {
     const toggleDrawer = (open: boolean) => () => {
         setState(open);
     };
+
     const list = (
         <Box className="SettingsSideBar">
             <div className="SettingsSideBar__container">
@@ -100,7 +101,7 @@ export default function SettingsSideBar() {
 
     return (
         <div>
-            <IconButton onClick={toggleDrawer(true)} aria-label="delete" sx={{ color: 'white' }}>
+            <IconButton onClick={toggleDrawer(true)} aria-label="delete" sx={{color: 'white'}}>
                 <img width={'30px'} src={settings} />
             </IconButton>
             <Drawer anchor={'left'} open={state} onClose={toggleDrawer(false)}>

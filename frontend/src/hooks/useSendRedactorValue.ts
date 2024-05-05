@@ -1,9 +1,9 @@
-import { Socket } from 'socket.io-client';
-import { useLog, useRedactor } from '../store';
-import { useEffect } from 'react';
-import { URLS } from '../constants';
+import {Socket} from 'socket.io-client';
+import {useLog, useRedactor} from '../store';
+import {useEffect} from 'react';
+import {URLS} from '../constants';
 
-function useSendRedactorValue(socket: Socket) {
+export default function useSendRedactorValue(socket: Socket) {
     const redactorValue = useRedactor(state => state.redactorValue);
     const allowСhange = useRedactor(state => state.allowСhange);
     const name = useLog(state => state.name);
@@ -11,9 +11,9 @@ function useSendRedactorValue(socket: Socket) {
 
     useEffect(() => {
         const params = {
+            name,
+            room,
             data: redactorValue,
-            name: name,
-            room: room,
         };
 
         if (allowСhange) {
@@ -21,4 +21,3 @@ function useSendRedactorValue(socket: Socket) {
         }
     }, [redactorValue]);
 }
-export { useSendRedactorValue };

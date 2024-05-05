@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import './index.css';
-
+import { BrowserRouter } from 'react-router-dom';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
 import App from './App';
@@ -20,7 +20,9 @@ if (rootElement) {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
         <ThemeProvider theme={theme}>
-            <App />
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
         </ThemeProvider>,
     );
 } else {

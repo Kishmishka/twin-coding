@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { CircularProgress, IconButton } from '@mui/material';
+import {CircularProgress, IconButton} from '@mui/material';
 import compile from '../../img/compile.svg';
 import close from '../../img/close.svg';
-import { useCompiling, useRedactor, useSettingsRedactor } from '../../store';
+import {useCompiling, useRedactor, useSettingsRedactor} from '../../store';
 import axios from 'axios';
-import { CompilingStatus } from '../../constants';
+import {CompilingStatus} from '../../constants';
 import './OutputSideBar.scss';
 
 const OutputSideBar = () => {
@@ -55,8 +55,6 @@ const OutputSideBar = () => {
                 checkCompilingRezult(token);
             })
             .catch(err => {
-                let error = err.response ? err.response.data : err;
-                // get error status
                 let status = err.response.status;
                 if (status === CompilingStatus.manyRequest) {
                     setCompilingOutputManyReques();
@@ -69,7 +67,7 @@ const OutputSideBar = () => {
         const options = {
             method: 'GET',
             url: import.meta.env.VITE_API_URL + '/' + token,
-            params: { base64_encoded: 'true', fields: '*' },
+            params: {base64_encoded: 'true', fields: '*'},
             headers: {
                 'X-RapidAPI-Host': import.meta.env.VITE_API_HOST,
                 'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
@@ -95,6 +93,7 @@ const OutputSideBar = () => {
             setCompilingProcess(false);
         }
     };
+
     return (
         <div className="OutputSideBar">
             <IconButton

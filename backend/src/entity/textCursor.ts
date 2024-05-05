@@ -1,4 +1,4 @@
-export class TextCursor {
+export default class TextCursor {
     startRow: number;
     startCol: number;
     endRow: number;
@@ -6,6 +6,7 @@ export class TextCursor {
     className: string;
     type: string;
     id: string;
+
     constructor(id: string) {
         this.id = id;
         this.startRow = 0;

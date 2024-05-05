@@ -1,6 +1,6 @@
-import { Names, URLS } from '../constants.ts';
+import { NAMES } from '../constants.ts';
 
-export class User {
+export default class User {
     id: string;
     name: string;
     room: number;
@@ -10,10 +10,11 @@ export class User {
     textCursorRow: number;
     color: string;
     seat: number;
+
     constructor(socket: string) {
         this.id = socket;
-        this.name = Names[Math.floor(Math.random() * 16)];
-        this.room = URLS.room;
+        this.name = NAMES[Math.floor(Math.random() * 16)];
+        this.room = 0;
         this.cursorX = 0;
         this.cursorY = 0;
         this.textCursorColumn = 0;

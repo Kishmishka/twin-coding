@@ -1,12 +1,19 @@
 import { IColors } from './interfaces.ts';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const URLS = {
-    httpServer: process.env.REACT_APP_URL_SERVER,
-    port: 3030,
+    httpServer: process.env.VITE_URL_SERVER,
+    portServer: process.env.VITE_PORT_SERVER,
+    portClient: process.env.VITE_PORT_CLIENT,
+    saveChange: '/saveChange',
+    getRooms: '/getRooms',
+    createRoom: '/createRoom',
+    room: '0',
     connection: 'connection',
-    join: 'join',
+    joinNewRoom: 'joinNewRoom',
+    joinExistingRoom: 'joinExistingRoom',
     auth: 'auth',
-    room: 777,
     clientValueСhanged: 'clientValueСhanged',
     serverValue: 'serverValue',
     disconnect: 'disconnect',
@@ -19,7 +26,7 @@ export const URLS = {
     serverLanguage: 'serverLanguage',
 };
 
-export const Colors: IColors = {
+export const COLORS: IColors = {
     '1': '#0074E8',
     '2': '#C8333F',
     '3': '#B24D9A',
@@ -27,7 +34,7 @@ export const Colors: IColors = {
     '5': '#31B2A5',
 };
 
-export const ColorsTextCursors: IColors = {
+export const COLORS_TEXT_CURSORS: IColors = {
     '1': 'TextCursor_blue',
     '2': 'TextCursor_red',
     '3': 'TextCursor_violet',
@@ -35,7 +42,7 @@ export const ColorsTextCursors: IColors = {
     '5': 'TextCursor_turquoise',
 };
 
-export const Names = [
+export const NAMES = [
     'Загорелый пингвин',
     'Равнодушная лягушка',
     'Безудержный муравьед',
