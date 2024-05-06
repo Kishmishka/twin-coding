@@ -1,6 +1,8 @@
 import { create } from 'zustand';
-import { CompilingStatus, Languages } from './constants';
+
 import { ICursorPosition, ILanguage, IMarker, ITextCursorPosition, IUser } from './interfaces';
+import COMPILINGSTATUS from './constants/COMPILINGSTATUS';
+import LANGUAGES from './constants/LANGUAGES';
 
 //Значения компиляции
 //Используется в компоненте OutputSideBar.jsx
@@ -20,10 +22,11 @@ export const useCompiling = create<ICompilingState>((set, get) => ({
 
     setCompilingOutputManyReques: () => {
         set({
-            compilingOutput: get().compilingOutput + '\n' + 'Quota of 50 requests exceeded for the Day!',
+            compilingOutput:
+                get().compilingOutput + '\n' + 'Quota of 50 requests exceeded for the Day!',
         });
     },
-    setCompilingOutput: responseCompiling => {
+    setCompilingOutput: (responseCompiling) => {
         set({
             compilingOutput:
                 get().compilingOutput +
@@ -36,16 +39,16 @@ export const useCompiling = create<ICompilingState>((set, get) => ({
                     : '') +
                 (responseCompiling?.time ? '\n' + `time spent: ${responseCompiling?.time} s` : '') +
                 '\n' +
-                (responseCompiling.status.id === CompilingStatus.compilationError
+                (responseCompiling.status.id === COMPILINGSTATUS.compilationError
                     ? `compilation error: ${atob(responseCompiling?.compile_output)}`
-                    : responseCompiling.status.id === CompilingStatus.succes
+                    : responseCompiling.status.id === COMPILINGSTATUS.succes
                     ? `rezult: ${atob(responseCompiling.stdout)}`
-                    : responseCompiling.status.id === CompilingStatus.error
+                    : responseCompiling.status.id === COMPILINGSTATUS.error
                     ? `error: Time Limit Exceeded`
                     : `error: ${atob(responseCompiling?.stderr)}`),
         });
     },
-    setCompilingProcess: compilingProcess => {
+    setCompilingProcess: (compilingProcess) => {
         set({ compilingProcess });
     },
 }));
@@ -59,7 +62,7 @@ export const useCompiling = create<ICompilingState>((set, get) => ({
 interface ISettingsRedactorState {
     language: ILanguage;
     tabSize: number;
-    blackTheme: boolean;
+    themeIsBlack: boolean;
     cursorLabel: boolean;
     textCursorLabel: boolean;
     setLanguage: (value: string) => void;
@@ -71,35 +74,35 @@ interface ISettingsRedactorState {
 }
 
 export const useSettingsRedactor = create<ISettingsRedactorState>((set, get) => ({
-    language: Languages.javaScript,
+    language: LANGUAGES.javaScript,
     tabSize: 3,
     //Флаг выбора темы
-    blackTheme: false,
+    themeIsBlack: false,
     //Флаг отображения курсоров пользователя
     cursorLabel: false,
     //Флаг отображения текстовых курсоров пользователя
     textCursorLabel: false,
 
-    setLanguage: value => {
+    setLanguage: (value) => {
         switch (value) {
-            case Languages.java.name:
-                set({ language: Languages.java });
+            case LANGUAGES.java.name:
+                set({ language: LANGUAGES.java });
                 break;
-            case Languages.javaScript.name:
-                set({ language: Languages.javaScript });
+            case LANGUAGES.javaScript.name:
+                set({ language: LANGUAGES.javaScript });
                 break;
-            case Languages.sql.name:
-                set({ language: Languages.sql });
+            case LANGUAGES.sql.name:
+                set({ language: LANGUAGES.sql });
                 break;
         }
     },
-    setTabSize: tabSize => {
+    setTabSize: (tabSize) => {
         set({ tabSize });
     },
     swapblackTheme: () => {
-        set({ blackTheme: !get().blackTheme });
+        set({ themeIsBlack: !get().themeIsBlack });
     },
-    setCursorLabel: cursorLabel => {
+    setCursorLabel: (cursorLabel) => {
         set({ cursorLabel });
     },
     swapCursorLabel: () => {
@@ -120,7 +123,7 @@ export const useSettingsRedactor = create<ISettingsRedactorState>((set, get) => 
 interface ILogState {
     id: string;
     name: string;
-    room: number;
+    room: string;
     color: string;
     users: IUser[];
     markers: IMarker[];
@@ -128,36 +131,36 @@ interface ILogState {
     setUsers: (value: IUser[]) => void;
     setId: (id: string) => void;
     setName: (value: string) => void;
-    setRoom: (value: number) => void;
+    setRoom: (value: string) => void;
     setColor: (value: string) => void;
 }
 export const useLog = create<ILogState>((set, get) => ({
     id: '',
     name: '',
-    room: 0,
+    room: '0',
     color: '',
     users: [],
     //Массив со значениями текстовых курсоров пользоваиелей
     markers: [],
 
     setMarkers(value) {
-        const markers = value.filter(marker => marker.id !== get().id);
+        const markers = value.filter((marker) => marker.id !== get().id);
         set({ markers });
     },
     setUsers(value) {
-        const users = value.filter(user => user.id !== get().id);
+        const users = value.filter((user) => user.id !== get().id);
         set({ users });
     },
-    setId: id => {
+    setId: (id) => {
         set({ id });
     },
-    setName: name => {
+    setName: (name) => {
         set({ name });
     },
-    setRoom: room => {
+    setRoom: (room) => {
         set({ room });
     },
-    setColor: color => {
+    setColor: (color) => {
         set({ color });
     },
 }));
@@ -181,7 +184,7 @@ interface IRedactorState {
     setAllowChange: (alowchange: boolean) => void;
 }
 
-export const useRedactor = create<IRedactorState>(set => ({
+export const useRedactor = create<IRedactorState>((set) => ({
     //Флаг разрещающий изменения состояния текста
     allowСhange: false,
     //Значение текстового редактора
@@ -194,14 +197,14 @@ export const useRedactor = create<IRedactorState>(set => ({
         X: 0,
         Y: 0,
     },
-    setAllowChange: allowСhange => {
+    setAllowChange: (allowСhange) => {
         set({ allowСhange });
     },
     //  setStartRedactorValue: value => {
     //      if (value) set({ redactorValue: value });
     //      set({ allowСhange: true });
     //  },
-    setRedactorValue: redactorValue => {
+    setRedactorValue: (redactorValue) => {
         set({ redactorValue });
     },
     setCursorPosition(x, y) {

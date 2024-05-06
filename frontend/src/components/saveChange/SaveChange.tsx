@@ -2,19 +2,21 @@ import { IconButton, Snackbar } from '@mui/material';
 import cloud from '../../img/cloud.svg';
 import { useState } from 'react';
 import Service from '../../API/service';
-import { useRedactor, useSettingsRedactor } from '../../store';
+import { useLog, useRedactor, useSettingsRedactor } from '../../store';
 
 const SaveChange = () => {
     const [open, setOpen] = useState<boolean>(false);
     const setRedactorValue = useRedactor((state) => state.setRedactorValue);
     const setLanguage = useSettingsRedactor((state) => state.setLanguage);
     const setAllowChange = useRedactor((state) => state.setAllowChange);
+    const room = useLog((state) => state.room);
+
     const handleClick = () => {
         setOpen(true);
-        Service.saveChange().then((data) => {
+        Service.saveChange(room).then((data) => {
             setAllowChange(false);
             setLanguage(data.data.languageValue.value);
-            setRedactorValue(data.data.editorValue.value);
+            setRedactorValue(data.data.editorValue);
         });
     };
 

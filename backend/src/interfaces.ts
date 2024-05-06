@@ -9,24 +9,29 @@ export interface IColors {
 export interface IClientValueСhangedData {
     data: string;
     name: string;
-    room: number;
+    room: string;
 }
 
-export interface IPositionCursorChangeData {
+export interface IPositionCursor {
     id: string;
     X: number;
     Y: number;
+    room: string;
 }
-export interface IPositionTextCursorChangeData {
+export interface IPositionTextCursor {
     id: string;
     column: number;
     row: number;
+    room: string;
 }
-
+export interface ILaguage {
+    language: string;
+    room: string;
+}
 export interface IUser {
     id: string;
     name: string;
-    room: number;
+    room: string;
     cursorX: number;
     cursorY: number;
     textCursorColumn: number;

@@ -11,7 +11,7 @@ import SaveChange from '../SaveChange/SaveChange.tsx';
 //Компонент отвечающий за отрисовку боковой панели
 //Используется в компоненте App.js
 const SideBar = () => {
-    const blackTheme = useSettingsRedactor((state) => state.blackTheme);
+    const themeIsBlack = useSettingsRedactor((state) => state.themeIsBlack);
     const swapblackTheme = useSettingsRedactor((state) => state.swapblackTheme);
     const users = useLog((state) => state.users);
     const color = useLog((state) => state.color);
@@ -24,7 +24,7 @@ const SideBar = () => {
 
                 {color !== '' && name !== '' && <Avatar color={color} name={name} />}
                 {users.map((user) => (
-                    <Avatar color={user.color} name={user.name} />
+                    <Avatar key={user.id} color={user.color} name={user.name} />
                 ))}
             </div>
             <div className="SideBar__settings">
@@ -34,7 +34,7 @@ const SideBar = () => {
                 <SettingsSideBar />
                 <MySwitch
                     onChange={swapblackTheme} // Pass the function directly, no need for an anonymous function
-                    blackTheme={blackTheme} // Pass the boolean value directly
+                    themeIsBlack={themeIsBlack} // Pass the boolean value directly
                 />
             </div>
         </div>

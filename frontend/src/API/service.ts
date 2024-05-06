@@ -1,5 +1,6 @@
 import axios from 'axios';
-import {URLS} from '../constants';
+import URLS from '../constants/URLS';
+
 const instanse = axios.create({
     baseURL: URLS.httpServer + URLS.portServer,
     timeout: 1000,
@@ -11,7 +12,10 @@ export default class Service {
     static async getRooms() {
         return instanse.get(URLS.getRooms);
     }
-    static async saveChange() {
-        return instanse.post(URLS.saveChange);
+    static async saveChange(room: string) {
+        return instanse.post(URLS.saveChange, { room });
+    }
+    static async disconect(room: string, id: string) {
+        return instanse.post(URLS.disconnect, { room, id });
     }
 }

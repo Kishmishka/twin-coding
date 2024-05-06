@@ -7,14 +7,14 @@ import {
     DialogTitle,
     IconButton,
 } from '@mui/material';
-import React from 'react';
-import {useLog} from '../../store';
+import { useState } from 'react';
+import { useLog } from '../../store';
 import share from '../../img/share.svg';
-import {URLS} from '../../constants';
+import URLS from '../../constants/URLS';
 
 const ShareLink = () => {
-    const [open, setOpen] = React.useState(false);
-    const room = useLog(state => state.room);
+    const [open, setOpen] = useState(false);
+    const room = useLog((state) => state.room);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -26,7 +26,7 @@ const ShareLink = () => {
 
     return (
         <>
-            <IconButton onClick={handleClickOpen} aria-label="delete" sx={{color: 'white'}}>
+            <IconButton onClick={handleClickOpen} aria-label="delete" sx={{ color: 'white' }}>
                 <img width={'30px'} src={share} />
             </IconButton>
             <Dialog
@@ -35,7 +35,7 @@ const ShareLink = () => {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <div style={{backgroundColor: '#232323', color: 'white'}}>
+                <div style={{ backgroundColor: '#232323', color: 'white' }}>
                     <DialogTitle id="alert-dialog-title">{'link to your room'}</DialogTitle>
                     <DialogContent>
                         <DialogContentText

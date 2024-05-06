@@ -1,19 +1,20 @@
-import {useEffect} from 'react';
-import {useLog, useRedactor, useSettingsRedactor} from '../store';
-import {URLS} from '../constants';
-import {Socket} from 'socket.io-client';
-import {useSearchParams} from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLog, useRedactor, useSettingsRedactor } from '../store';
+
+import { Socket } from 'socket.io-client';
+import { useSearchParams } from 'react-router-dom';
+import URLS from '../constants/URLS';
 
 export default function useGetServerValue(socket: Socket) {
-    const setId = useLog(state => state.setId);
-    const setName = useLog(state => state.setName);
-    const setRoom = useLog(state => state.setRoom);
-    const setColor = useLog(state => state.setColor);
-    const setUsers = useLog(state => state.setUsers);
-    const setMarkers = useLog(state => state.setMarkers);
-    const setRedactorValue = useRedactor(state => state.setRedactorValue);
-    const setAllowChange = useRedactor(state => state.setAllowChange);
-    const setLanguage = useSettingsRedactor(state => state.setLanguage);
+    const setId = useLog((state) => state.setId);
+    const setName = useLog((state) => state.setName);
+    const setRoom = useLog((state) => state.setRoom);
+    const setColor = useLog((state) => state.setColor);
+    const setUsers = useLog((state) => state.setUsers);
+    const setMarkers = useLog((state) => state.setMarkers);
+    const setRedactorValue = useRedactor((state) => state.setRedactorValue);
+    const setAllowChange = useRedactor((state) => state.setAllowChange);
+    const setLanguage = useSettingsRedactor((state) => state.setLanguage);
     const [searchParams] = useSearchParams();
 
     const room = searchParams.get('room');
@@ -25,7 +26,7 @@ export default function useGetServerValue(socket: Socket) {
             socket.emit(URLS.joinExistingRoom, room);
         }
 
-        socket.on(URLS.auth, data => {
+        socket.on(URLS.auth, (data) => {
             setAllowChange(false);
             setId(data.id);
             setName(data.name);
@@ -33,26 +34,31 @@ export default function useGetServerValue(socket: Socket) {
             setLanguage(data.language);
             setColor(data.color);
             setRedactorValue(data.editorValue);
+            socket.emit(URLS.newUserConnect, data.users);
+            setUsers(data.users);
         });
 
-        socket.on(URLS.serverValue, editorValue => {
+        socket.on(URLS.newUsersArray, (users) => {
+            setUsers(users);
+        });
+        socket.on(URLS.serverValue, (editorValue) => {
             setRedactorValue(editorValue);
         });
 
-        socket.on(URLS.serverCursors, userss => {
-            setUsers(userss);
+        socket.on(URLS.serverCursors, (users) => {
+            setUsers(users);
         });
 
-        socket.on(URLS.serverTextCursors, textCursorss => {
+        socket.on(URLS.serverTextCursors, (textCursorss) => {
             setMarkers(textCursorss);
         });
 
-        socket.on(URLS.clientDisconnect, params => {
-            setUsers(params.users);
-            setMarkers(params.textCursors);
+        socket.on(URLS.clientDisconnect, (clientDisconnectParams) => {
+            setUsers(clientDisconnectParams.users);
+            setMarkers(clientDisconnectParams.textCursors);
         });
 
-        socket.on(URLS.serverLanguage, languageValue => {
+        socket.on(URLS.serverLanguage, (languageValue) => {
             setLanguage(languageValue);
         });
     }, []);

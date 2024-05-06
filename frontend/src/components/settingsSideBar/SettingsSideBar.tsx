@@ -3,27 +3,27 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import {FormControlLabel, IconButton, Switch} from '@mui/material';
+import { FormControlLabel, IconButton, Switch } from '@mui/material';
 import Menu from '../MUI/Menu';
-import {useSettingsRedactor} from '../../store';
+import { useSettingsRedactor } from '../../store';
 import settings from '../../img/settings.svg';
 import MySlider from '../MUI/MySlider';
 import './SettingsSideBar.scss';
-import {Languages} from '../../constants';
+import LANGUAGES from '../../constants/LANGUAGES';
 
 //Выпадающее меню настроек редактора
 //Задействован в компоненте SideBar.jsx
 //Создан при помощи material-ui
 export default function SettingsSideBar() {
     const [state, setState] = React.useState(false);
-    const setLanguage = useSettingsRedactor(state => state.setLanguage);
-    const language = useSettingsRedactor(state => state.language);
-    const setTabSize = useSettingsRedactor(state => state.setTabSize);
-    const tabSize = useSettingsRedactor(state => state.tabSize);
-    const swapCursorLabel = useSettingsRedactor(state => state.swapCursorLabel);
-    const cursorLabel = useSettingsRedactor(state => state.cursorLabel);
-    const swapTextCursorLabel = useSettingsRedactor(state => state.swapTextCursorLabel);
-    const textCursorLabel = useSettingsRedactor(state => state.textCursorLabel);
+    const setLanguage = useSettingsRedactor((state) => state.setLanguage);
+    const language = useSettingsRedactor((state) => state.language);
+    const setTabSize = useSettingsRedactor((state) => state.setTabSize);
+    const tabSize = useSettingsRedactor((state) => state.tabSize);
+    const swapCursorLabel = useSettingsRedactor((state) => state.swapCursorLabel);
+    const cursorLabel = useSettingsRedactor((state) => state.cursorLabel);
+    const swapTextCursorLabel = useSettingsRedactor((state) => state.swapTextCursorLabel);
+    const textCursorLabel = useSettingsRedactor((state) => state.textCursorLabel);
 
     const toggleDrawer = (open: boolean) => () => {
         setState(open);
@@ -51,9 +51,9 @@ export default function SettingsSideBar() {
                             <Menu
                                 title={'Language'}
                                 items={[
-                                    Languages.java.name,
-                                    Languages.javaScript.name,
-                                    Languages.sql.name,
+                                    LANGUAGES.java.name,
+                                    LANGUAGES.javaScript.name,
+                                    LANGUAGES.sql.name,
                                 ]}
                                 setValue={setLanguage}
                                 value={language.name}
@@ -101,7 +101,7 @@ export default function SettingsSideBar() {
 
     return (
         <div>
-            <IconButton onClick={toggleDrawer(true)} aria-label="delete" sx={{color: 'white'}}>
+            <IconButton onClick={toggleDrawer(true)} aria-label="delete" sx={{ color: 'white' }}>
                 <img width={'30px'} src={settings} />
             </IconButton>
             <Drawer anchor={'left'} open={state} onClose={toggleDrawer(false)}>

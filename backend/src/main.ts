@@ -2,34 +2,32 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import { URLS, COLORS, COLORS_TEXT_CURSORS } from './constants.ts';
 import User from './entity/User.ts';
 import State from './entity/State.ts';
 import Collection from './entity/Collection.ts';
 import TextCursor from './entity/TextCursor.ts';
+import DataBase from './DataBase.ts';
+import OnlineRoomStorage from './entity/OnlineRoomStorage.ts';
+import URLS from './constants/URLS.ts';
+import COLORS from './constants/COLORS.ts';
+import COLORS_TEXT_CURSORS from './constants/COLORS_TEXT_CURSORS.ts';
 import {
     IClientValueСhangedData,
-    IPositionCursorChangeData,
-    IPositionTextCursorChangeData,
+    ILaguage,
+    IPositionCursor,
+    IPositionTextCursor,
     IRoomParams,
     ITextCursor,
     IUser,
 } from './interfaces.ts';
-import DataBase from './DataBase.ts';
 
-const db = new DataBase();
 const app = express();
 app.use(cors({ origin: '*' }));
-
-const editorValue = new State('');
-const languageValue = new State('Java script');
-const textCursors = new Collection();
-const users = new Collection();
 const server = http.createServer(app);
 
-let lastRequestTime = 0;
-let emptySeats: number[] = [5, 4, 3, 2, 1];
-let RoomNotExist: boolean = false;
+const languageValue = new State('Java script');
+const textCursors = new Collection();
+const db = new DataBase();
 
 const io = new Server(server, {
     cors: {
@@ -42,90 +40,113 @@ io.on(URLS.connection, (socket) => {
     console.log('connection established');
 
     socket.on(URLS.joinNewRoom, () => {
-        db.createRoom().then((data) => {
-            URLS.room = String(data.id);
+        db.createRoom().then((roomParams) => {
+            const room = String(roomParams.id);
 
-            const newUser = new User(socket.id);
-            newUser.seat = emptySeats.pop() || 0;
+            OnlineRoomStorage.initializationRoom(room, '', [], [5, 4, 3, 2, 1]);
+
+            const newUser = new User();
+            newUser.seat = OnlineRoomStorage.takeSeat(room);
             newUser.color = COLORS[newUser.seat];
-            users.add(newUser);
+            newUser.room = room;
+            OnlineRoomStorage.addUser(room, newUser);
 
             const newTextCursor = new TextCursor(socket.id);
             newTextCursor.className = COLORS_TEXT_CURSORS[newUser.seat];
             textCursors.add(newTextCursor);
 
-            socket.join(URLS.room);
-            editorValue.set(data.editorContent);
-            languageValue.set(data.language);
+            socket.join(room);
+
+            OnlineRoomStorage.setEditorContent(room, roomParams.editorContent);
+            languageValue.set(roomParams.language);
 
             socket.emit(URLS.auth, {
                 id: newUser.id,
                 name: newUser.name,
-                room: URLS.room,
+                room: room,
                 color: newUser.color,
-                editorValue: editorValue.get(),
+                editorValue: OnlineRoomStorage.getEditorContent(room),
                 language: languageValue.get(),
+                users: OnlineRoomStorage.getUsers(room),
             });
-            console.log(`${newUser.name} connect`);
+            console.log(`${newUser.name} connect room:${room}`);
         });
     });
 
     socket.on(URLS.joinExistingRoom, (room: string) => {
-        URLS.room = room;
-
-        const params: Promise<IRoomParams> = db.getRoomParams(Number(URLS.room));
-        params.then(() => {
-            if (emptySeats.length > 0) {
-                const newUser = new User(socket.id);
-                newUser.seat = emptySeats.pop() || 0;
+        OnlineRoomStorage.initializationRoom(
+            room,
+            OnlineRoomStorage.getEditorContent(room),
+            OnlineRoomStorage.getUsers(room),
+            OnlineRoomStorage.getEmptySeats(room),
+        );
+        if (OnlineRoomStorage.getEmptySeats(room).length > 0) {
+            const params: Promise<IRoomParams> = db.getRoomParams(Number(room));
+            params.then(() => {
+                const newUser = new User();
+                newUser.seat = OnlineRoomStorage.takeSeat(room);
                 newUser.color = COLORS[newUser.seat];
-                users.add(newUser);
+                newUser.room = room;
+
+                OnlineRoomStorage.addUser(room, newUser);
 
                 const newTextCursor = new TextCursor(socket.id);
                 newTextCursor.className = COLORS_TEXT_CURSORS[newUser.seat];
                 textCursors.add(newTextCursor);
 
-                socket.join(URLS.room);
+                socket.join(room);
 
                 socket.emit(URLS.auth, {
                     id: newUser.id,
                     name: newUser.name,
-                    room: URLS.room,
+                    room: room,
                     color: newUser.color,
-                    editorValue: editorValue.get(),
+                    editorValue: OnlineRoomStorage.getEditorContent(room),
                     language: languageValue.get(),
+                    users: OnlineRoomStorage.getUsers(room),
                 });
-                console.log(`${newUser.name} connect`);
-            }
-        });
+                console.log(`${newUser.name} connect room:${room}`);
+            });
+        }
     });
 
+    let lastRequestTime = 0;
+
     socket.on(URLS.clientValueСhanged, (params: IClientValueСhangedData) => {
-        editorValue.set(params.data);
+        OnlineRoomStorage.setEditorContent(params.room, params.data);
+
         const currentTime = Date.now();
 
         if (currentTime - lastRequestTime > 100) {
-            socket.to(URLS.room).emit(URLS.serverValue, editorValue.get());
+            socket
+                .to(params.room)
+                .emit(URLS.serverValue, OnlineRoomStorage.getEditorContent(params.room));
             lastRequestTime = currentTime;
         }
     });
 
-    socket.on(URLS.languageChange, (language: string) => {
-        languageValue.set(language);
-        socket.to(URLS.room).emit(URLS.serverLanguage, languageValue.get());
+    socket.on(URLS.languageChange, (response: ILaguage) => {
+        languageValue.set(response.language);
+        socket.to(response.room).emit(URLS.serverLanguage, languageValue.get());
     });
 
-    socket.on(URLS.positionCursorChange, (params: IPositionCursorChangeData) => {
-        for (let user of users.values) {
+    socket.on(URLS.newUserConnect, (response: IUser[]) => {
+        socket
+            .to(response[0].room)
+            .emit(URLS.newUsersArray, OnlineRoomStorage.getUsers(response[0].room));
+    });
+
+    socket.on(URLS.positionCursorChange, (params: IPositionCursor) => {
+        for (let user of OnlineRoomStorage.getUsers(params.room)) {
             if (user.id === params.id) {
                 user.cursorX = params.X;
                 user.cursorY = params.Y;
             }
         }
-        socket.to(URLS.room).emit(URLS.serverCursors, users.values);
+        socket.to(params.room).emit(URLS.serverCursors, OnlineRoomStorage.getUsers(params.room));
     });
 
-    socket.on(URLS.positionTextCursorChange, (params: IPositionTextCursorChangeData) => {
+    socket.on(URLS.positionTextCursorChange, (params: IPositionTextCursor) => {
         for (let textCursor of textCursors.values) {
             if (textCursor.id === params.id) {
                 textCursor.startRow = params.row;
@@ -135,38 +156,39 @@ io.on(URLS.connection, (socket) => {
             }
         }
 
-        socket.to(URLS.room).emit(URLS.serverTextCursors, textCursors.values);
+        socket.to(params.room).emit(URLS.serverTextCursors, textCursors.values);
     });
 
-    socket.on(URLS.disconnect, () => {
-        if (!RoomNotExist) {
-            users.values.forEach((user: IUser) => {
-                if (user.id === socket.id) {
-                    emptySeats.push(user.seat);
+    app.post(URLS.disconnect, (req, _res) => {
+        if (req.body.id) {
+            OnlineRoomStorage.getUsers(req.body.room).forEach((user: IUser) => {
+                if (user.id === req.body.id) {
+                    OnlineRoomStorage.freeSeats(req.body.room, user.seat);
+                    console.log(`${user.name} disconected`);
                 }
             });
 
-            users.set(users.values.filter((user: IUser) => user.id !== socket.id));
+            OnlineRoomStorage.deleteUser(req.body.room, req.body.id);
 
             textCursors.set(
-                textCursors.values.filter((textCursor: ITextCursor) => textCursor.id !== socket.id),
+                textCursors.values.filter(
+                    (textCursor: ITextCursor) => textCursor.id !== req.body.id,
+                ),
             );
 
-            const params = {
-                users: users.values,
+            io.to(req.body.room).emit(URLS.clientDisconnect, {
+                users: OnlineRoomStorage.getUsers(req.body.room),
                 textCursors: textCursors.values,
-            };
+            });
 
-            socket.to(URLS.room).emit(URLS.clientDisconnect, params);
-            console.log(`disconnect`);
-
-            if (!io.sockets.adapter.rooms.has(URLS.room)) {
+            if (OnlineRoomStorage.getUsers(req.body.room).length === 0) {
                 db.updateRoomParams({
-                    id: Number(URLS.room),
+                    id: Number(req.body.room),
                     language: languageValue.get(),
-                    editorContent: editorValue.get(),
+                    editorContent: OnlineRoomStorage.getEditorContent(req.body.room),
                     seatsCount: 5,
                 });
+                console.log('content saved');
             }
         }
     });
@@ -185,11 +207,12 @@ app.get(URLS.getRooms, (_req, res) => {
     db.getRooms().then((data) => res.send(data));
 });
 
-app.post(URLS.saveChange, (_req, res) => {
-    const params = db.getRoomParams(Number(URLS.room));
+app.use(express.json());
+
+app.post(URLS.saveChange, (req, res) => {
+    const params = db.getRoomParams(Number(req.body.room));
     params.then((data) => {
         languageValue.set(data.language);
-        editorValue.set(data.editorContent);
-        res.send({ languageValue, editorValue });
+        res.send({ languageValue, editorValue: data.editorContent });
     });
 });

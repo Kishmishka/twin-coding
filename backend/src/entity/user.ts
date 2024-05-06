@@ -1,9 +1,9 @@
-import { NAMES } from '../constants.ts';
+import NAMES from '../constants/NAMES.ts';
 
 export default class User {
     id: string;
     name: string;
-    room: number;
+    room: string;
     cursorX: number;
     cursorY: number;
     textCursorColumn: number;
@@ -11,10 +11,10 @@ export default class User {
     color: string;
     seat: number;
 
-    constructor(socket: string) {
-        this.id = socket;
+    constructor() {
+        this.id = Math.random().toString(16).slice(2);
         this.name = NAMES[Math.floor(Math.random() * 16)];
-        this.room = 0;
+        this.room = '0';
         this.cursorX = 0;
         this.cursorY = 0;
         this.textCursorColumn = 0;

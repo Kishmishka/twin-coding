@@ -1,9 +1,6 @@
 import './App.css';
-
 import io, { Socket } from 'socket.io-client';
-
 import useSendLanguage from './hooks/useSendLanguage.ts';
-import { URLS } from './constants.ts';
 import { useLog, useRedactor } from './store.ts';
 import useGetServerValue from './hooks/useGetServerValue.ts';
 import useSendRedactorValue from './hooks/useSendRedactorValue.ts';
@@ -13,12 +10,15 @@ import { useBeforeunload } from 'react-beforeunload';
 import SideBar from './components/SideBar/SideBar.tsx';
 import CodeRedactor from './components/CodeRedactor/CodeRedactor.tsx';
 import Cursor from './components/Cursor/Cursor.tsx';
+import Service from './API/service.ts';
+import URLS from './constants/URLS.ts';
 
 const socket: Socket = io(URLS.httpServer + URLS.portServer);
 
 function App() {
-    const name = useLog((state) => state.name);
+    const room = useLog((state) => state.room);
     const activeUsers = useLog((state) => state.users);
+    const id = useLog((state) => state.id);
     const setCursorPosition = useRedactor((state) => state.setCursorPosition);
 
     useGetServerValue(socket);
@@ -28,7 +28,7 @@ function App() {
     useSendLanguage(socket);
 
     useBeforeunload(() => {
-        socket.emit(URLS.disconnect, name);
+        Service.disconect(room, id);
     });
 
     return (

@@ -8,13 +8,13 @@ import 'ace-builds/src-noconflict/theme-twilight';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import { useLog, useRedactor, useSettingsRedactor } from '../../store';
 import './CodeRedactor.scss';
-import { Languages } from '../../constants';
+import LANGUAGES from '../../constants/LANGUAGES';
 
 //Компонент редактора кода с натройками
 //npm react-ace
 //Задействован в компоненте App.js
 const CodeRedactor = () => {
-    const theme = useSettingsRedactor((state) => state.blackTheme);
+    const themeIsBlack = useSettingsRedactor((state) => state.themeIsBlack);
     const language = useSettingsRedactor((state) => state.language);
     const tabSize = useSettingsRedactor((state) => state.tabSize);
     const redactorValue = useRedactor((state) => state.redactorValue);
@@ -26,10 +26,10 @@ const CodeRedactor = () => {
     return (
         <AceEditor
             style={{ position: 'relative', zIndex: 2 }}
-            mode={language.value || Languages.java.value}
+            mode={language.value || LANGUAGES.java.value}
             value={redactorValue}
             placeholder="good luck)"
-            theme={theme ? 'twilight' : 'tomorrow'}
+            theme={themeIsBlack ? 'twilight' : 'tomorrow'}
             fontSize={20}
             name="UNIQUE_ID_OF_DIV"
             width="100vw"
