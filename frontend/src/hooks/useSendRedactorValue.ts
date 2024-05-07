@@ -4,20 +4,18 @@ import { useEffect } from 'react';
 import URLS from '../constants/URLS';
 
 export default function useSendRedactorValue(socket: Socket) {
-    const redactorValue = useRedactor((state) => state.redactorValue);
-    const allowСhange = useRedactor((state) => state.allowСhange);
-    const name = useLog((state) => state.name);
-    const room = useLog((state) => state.room);
+   const redactorValue = useRedactor((state) => state.redactorValue);
+   const allowСhange = useRedactor((state) => state.allowСhange);
+   const room = useLog((state) => state.room);
 
-    useEffect(() => {
-        const params = {
-            name,
-            room,
-            data: redactorValue,
-        };
+   useEffect(() => {
+      const params = {
+         room,
+         redactorContent: redactorValue,
+      };
 
-        if (allowСhange) {
-            socket.emit(URLS.clientValueСhanged, params);
-        }
-    }, [redactorValue]);
+      if (allowСhange) {
+         socket.emit(URLS.redactorContentСhanged, params);
+      }
+   }, [redactorValue]);
 }
