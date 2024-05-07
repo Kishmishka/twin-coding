@@ -1,8 +1,9 @@
 import { IconButton, Snackbar } from '@mui/material';
 import cloud from '../../img/cloud.svg';
 import { useState } from 'react';
-import Service from '../../API/service';
+
 import { useLog, useRedactor, useSettingsRedactor } from '../../store';
+import Service from '../../API/Service';
 
 const SaveChange = () => {
     const [open, setOpen] = useState<boolean>(false);

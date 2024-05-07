@@ -10,8 +10,8 @@ import { useBeforeunload } from 'react-beforeunload';
 import SideBar from './components/SideBar/SideBar.tsx';
 import CodeRedactor from './components/CodeRedactor/CodeRedactor.tsx';
 import Cursor from './components/Cursor/Cursor.tsx';
-import Service from './API/service.ts';
 import URLS from './constants/URLS.ts';
+import Service from './API/Service.ts';
 
 const socket: Socket = io(URLS.httpServer + URLS.portServer);
 
