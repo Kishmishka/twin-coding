@@ -12,6 +12,7 @@ import Cursor from './components/Cursor/Cursor.tsx';
 import URLS from './constants/URLS.ts';
 import Service from './API/Service.ts';
 import useSendCaretPosition from './hooks/useSendCaretPosition.ts';
+import { useEffect } from 'react';
 
 const socket: Socket = io(URLS.httpServer + URLS.portServer);
 
@@ -27,9 +28,14 @@ function App() {
    useSendCaretPosition(socket);
    useSendLanguage(socket);
 
-   useBeforeunload(() => {
+   window.onbeforeunload = function () {
       Service.disconect(room, id);
-   });
+      return true;
+   };
+
+   // useBeforeunload(() => {
+   //    Service.disconect(room, id);
+   // });
 
    return (
       <div
