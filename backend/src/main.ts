@@ -8,21 +8,21 @@ import OnlineRoomStorage from './OnlineRoomStorage.ts';
 import URLS from './constants/URLS.ts';
 import COLORS from './constants/COLORS.ts';
 import COLORS_TEXT_CURSORS from './constants/COLORS_TEXT_CURSORS.ts';
+import Caret from './entity/Caret.ts';
+import Cursor from './entity/Cursor.ts';
 import {
    ILaguage,
    IPositionCursor,
-   IPositionTextCursor,
+   IPositionCaret,
    IRedactorContent,
    IRoomParams,
    IUser,
 } from './interfaces.ts';
-import Caret from './entity/Caret.ts';
-import { Cursor } from './entity/Cursor.ts';
 
 const app = express();
 app.use(cors({ origin: '*' }));
-const server = http.createServer(app);
 
+const server = http.createServer(app);
 const db = new DataBase();
 
 const io = new Server(server, {
@@ -33,8 +33,6 @@ const io = new Server(server, {
 });
 
 io.on(URLS.connection, (socket) => {
-   console.log('connection established');
-
    socket.on(URLS.joinNewRoom, () => {
       db.createRoom().then((roomParams) => {
          const room = String(roomParams.id);
@@ -127,7 +125,7 @@ io.on(URLS.connection, (socket) => {
 
       const currentTime = Date.now();
 
-      if (currentTime - lastRequestTime > 100) {
+      if (currentTime - lastRequestTime > 50) {
          socket
             .to(redactorContent.room)
             .emit(
@@ -140,9 +138,7 @@ io.on(URLS.connection, (socket) => {
 
    socket.on(URLS.languageChange, (language: ILaguage) => {
       OnlineRoomStorage.setLanguage(language.room, language.language);
-      socket
-         .to(language.room)
-         .emit(URLS.serverLanguage, OnlineRoomStorage.getLanguage(language.room));
+      socket.to(language.room).emit(URLS.serverLanguage, language.language);
    });
 
    socket.on(URLS.newUserConnect, (newUserArray: IUser[]) => {
@@ -164,7 +160,7 @@ io.on(URLS.connection, (socket) => {
       socket.to(positionCursor.room).emit(URLS.newCursorsArray, cursors);
    });
 
-   socket.on(URLS.positionCaretrChange, (params: IPositionTextCursor) => {
+   socket.on(URLS.positionCaretrChange, (params: IPositionCaret) => {
       const carets = OnlineRoomStorage.getCarets(params.room);
 
       for (let caret of carets) {

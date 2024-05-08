@@ -1,14 +1,6 @@
 import { create } from 'zustand';
 
-import {
-   ICaret,
-   ICursor,
-   ICursorPosition,
-   ILanguage,
-   IMarker,
-   ITextCursorPosition,
-   IUser,
-} from './interfaces';
+import { ICursor, ICursorPosition, ILanguage, IMarker, ICaretPosition, IUser } from './interfaces';
 import COMPILINGSTATUS from './constants/COMPILINGSTATUS';
 import LANGUAGES from './constants/LANGUAGES';
 
@@ -189,9 +181,8 @@ export const useLog = create<ILogState>((set, get) => ({
 interface IRedactorState {
    allowСhange: boolean;
    redactorValue: string;
-   textCursorPosition: ITextCursorPosition;
+   textCursorPosition: ICaretPosition;
    cursorPosition: ICursorPosition;
-   //  setStartRedactorValue: (value: string) => void;
    setRedactorValue: (value: string) => void;
    setCursorPosition: (x: number, y: number) => void;
    setTextCursorPosition: (x: number, y: number) => void;
@@ -214,10 +205,6 @@ export const useRedactor = create<IRedactorState>((set) => ({
    setAllowChange: (allowСhange) => {
       set({ allowСhange });
    },
-   //  setStartRedactorValue: value => {
-   //      if (value) set({ redactorValue: value });
-   //      set({ allowСhange: true });
-   //  },
    setRedactorValue: (redactorValue) => {
       set({ redactorValue });
    },

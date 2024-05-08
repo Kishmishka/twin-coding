@@ -4,6 +4,14 @@ import { useLog, useRedactor, useSettingsRedactor } from '../store';
 import { Socket } from 'socket.io-client';
 import { useSearchParams } from 'react-router-dom';
 import URLS from '../constants/URLS';
+import {
+   IAuthParams,
+   ICursor,
+   IDisconectParams,
+   ILoadRoomParams,
+   IMarker,
+   IUser,
+} from '../interfaces';
 
 export default function useGetServerValue(socket: Socket) {
    const setId = useLog((state) => state.setId);
@@ -27,45 +35,46 @@ export default function useGetServerValue(socket: Socket) {
          socket.emit(URLS.joinExistingRoom, room);
       }
 
-      socket.on(URLS.auth, (data) => {
+      socket.on(URLS.auth, (authParams: IAuthParams) => {
          setAllowChange(false);
-         setId(data.id);
-         setName(data.name);
-         setRoom(data.room);
-         setLanguage(data.language);
-         setColor(data.color);
-         setRedactorValue(data.editorValue);
-         socket.emit(URLS.newUserConnect, data.users);
-         setUsers(data.users);
+         setId(authParams.id);
+         setName(authParams.name);
+         setRoom(authParams.room);
+         setLanguage(authParams.language);
+         setColor(authParams.color);
+         setRedactorValue(authParams.editorValue);
+         socket.emit(URLS.newUserConnect, authParams.users);
+         setUsers(authParams.users);
       });
 
-      socket.on(URLS.uploadedRoomParams, (roomParams) => {
-         setRedactorValue(roomParams.editorContent);
+      socket.on(URLS.uploadedRoomParams, (roomParams: ILoadRoomParams) => {
          setLanguage(roomParams.language);
+         setRedactorValue(roomParams.editorContent);
       });
 
-      socket.on(URLS.newUsersArray, (users) => {
+      socket.on(URLS.newUsersArray, (users: IUser[]) => {
          setUsers(users);
       });
 
-      socket.on(URLS.newRedactorContent, (redactorContent) => {
+      socket.on(URLS.newRedactorContent, (redactorContent: string) => {
          setRedactorValue(redactorContent);
       });
 
-      socket.on(URLS.newCursorsArray, (cursorsArray) => {
+      socket.on(URLS.newCursorsArray, (cursorsArray: ICursor[]) => {
          setCursors(cursorsArray);
       });
 
-      socket.on(URLS.newCaretsArray, (caretsArray) => {
+      socket.on(URLS.newCaretsArray, (caretsArray: IMarker[]) => {
          setCarets(caretsArray);
       });
 
-      socket.on(URLS.clientDisconnect, (clientDisconnectParams) => {
+      socket.on(URLS.clientDisconnect, (clientDisconnectParams: IDisconectParams) => {
          setUsers(clientDisconnectParams.users);
-         setCarets(clientDisconnectParams.textCursors);
+         setCarets(clientDisconnectParams.carets);
+         setCursors(clientDisconnectParams.cursors);
       });
 
-      socket.on(URLS.serverLanguage, (languageValue) => {
+      socket.on(URLS.serverLanguage, (languageValue: string) => {
          setLanguage(languageValue);
       });
    }, []);

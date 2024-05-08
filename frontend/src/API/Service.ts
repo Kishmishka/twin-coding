@@ -6,7 +6,7 @@ const instanse = axios.create({
    timeout: 1000,
 });
 class Service {
-   async saveChange(room: string) {
+   async loadRoomParams(room: string) {
       return instanse.post(URLS.loadRoomParams, { room });
    }
    async disconect(room: string, id: string) {

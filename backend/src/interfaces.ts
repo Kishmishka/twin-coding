@@ -6,6 +6,7 @@ export interface IColors {
    '4': string;
    '5': string;
 }
+
 export interface IRedactorContent {
    redactorContent: string;
    room: string;
@@ -17,31 +18,17 @@ export interface IPositionCursor {
    Y: number;
    room: string;
 }
-export interface IPositionTextCursor {
+
+export interface IPositionCaret {
    id: string;
    column: number;
    row: number;
    room: string;
 }
+
 export interface ILaguage {
    language: string;
    room: string;
-}
-export interface IUser {
-   id: string;
-   name: string;
-   room: string;
-   color: string;
-   seat: number;
-}
-
-export interface ITextCursor {
-   startRow: number;
-   startCol: number;
-   endRow: number;
-   endCol: number;
-   className: string;
-   type: string;
 }
 
 export interface IRoomParams {
@@ -49,6 +36,14 @@ export interface IRoomParams {
    language: string;
    editorContent: string;
    seatsCount: number;
+}
+
+export interface IUser {
+   id: string;
+   name: string;
+   room: string;
+   color: string;
+   seat: number;
 }
 
 export interface ICursor {
