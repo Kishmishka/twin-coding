@@ -63,3 +63,7 @@ export interface ICaret {
    className: string;
    type: string;
 }
+export interface IDisconnectParams {
+   room: string;
+   id: string;
+}

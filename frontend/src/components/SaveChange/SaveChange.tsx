@@ -1,7 +1,6 @@
 import { IconButton, Snackbar } from '@mui/material';
-import cloud from '../../img/cloud.svg';
+import saveChange from '../../img/save.svg';
 import { useState } from 'react';
-
 import { useLog } from '../../store';
 import Service from '../../API/Service';
 
@@ -11,13 +10,13 @@ const SaveChange = () => {
 
    const handleClick = () => {
       setOpen(true);
-      Service.loadRoomParams(room);
+      Service.saveChange(room);
    };
 
    return (
       <div>
          <IconButton onClick={handleClick} aria-label="delete" sx={{ color: 'white' }}>
-            <img width={'30px'} src={cloud} />
+            <img width={'30px'} src={saveChange} />
          </IconButton>
          <Snackbar
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -25,7 +24,7 @@ const SaveChange = () => {
             onClose={() => {
                setOpen(false);
             }}
-            message="Data uploaded"
+            message="Changes saved"
             key={'bottom' + 'right'}
          />
       </div>

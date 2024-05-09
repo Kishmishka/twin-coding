@@ -24,6 +24,8 @@ export default function useGetServerValue(socket: Socket) {
    const setRedactorValue = useRedactor((state) => state.setRedactorValue);
    const setAllowChange = useRedactor((state) => state.setAllowChange);
    const setLanguage = useSettingsRedactor((state) => state.setLanguage);
+   const ChangeIsSaved = useRedactor((state) => state.ChangeIsSaved);
+   const setChangeIsSaved = useRedactor((state) => state.setChangeIsSaved);
    const [searchParams] = useSearchParams();
 
    const room = searchParams.get('room');
@@ -56,8 +58,13 @@ export default function useGetServerValue(socket: Socket) {
          setUsers(users);
       });
 
+      socket.on(URLS.changeIsSaved, () => {
+         setChangeIsSaved(true);
+      });
+
       socket.on(URLS.newRedactorContent, (redactorContent: string) => {
          setRedactorValue(redactorContent);
+         if (ChangeIsSaved) setChangeIsSaved(false);
       });
 
       socket.on(URLS.newCursorsArray, (cursorsArray: ICursor[]) => {

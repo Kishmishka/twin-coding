@@ -5,14 +5,11 @@ import { useLog, useRedactor } from './store.ts';
 import useGetServerValue from './hooks/useGetServerValue.ts';
 import useSendRedactorValue from './hooks/useSendRedactorValue.ts';
 import useSendCursorPosition from './hooks/useSendCursorPosition.ts';
-import { useBeforeunload } from 'react-beforeunload';
 import SideBar from './components/SideBar/SideBar.tsx';
 import CodeRedactor from './components/CodeRedactor/CodeRedactor.tsx';
 import Cursor from './components/Cursor/Cursor.tsx';
 import URLS from './constants/URLS.ts';
-import Service from './API/Service.ts';
 import useSendCaretPosition from './hooks/useSendCaretPosition.ts';
-import { useEffect } from 'react';
 
 const socket: Socket = io(URLS.httpServer + URLS.portServer);
 
@@ -20,6 +17,7 @@ function App() {
    const room = useLog((state) => state.room);
    const cursors = useLog((state) => state.cursors);
    const id = useLog((state) => state.id);
+   const ChangeIsSaved = useRedactor((state) => state.ChangeIsSaved);
    const setCursorPosition = useRedactor((state) => state.setCursorPosition);
 
    useGetServerValue(socket);
@@ -29,13 +27,12 @@ function App() {
    useSendLanguage(socket);
 
    window.onbeforeunload = function () {
-      Service.disconect(room, id);
-      return true;
+      if (!ChangeIsSaved) return false;
    };
 
-   // useBeforeunload(() => {
-   //    Service.disconect(room, id);
-   // });
+   window.onunload = function () {
+      socket.emit(URLS.disconnect, { room, id });
+   };
 
    return (
       <div

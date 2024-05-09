@@ -179,6 +179,7 @@ export const useLog = create<ILogState>((set, get) => ({
 //useSendReadctorValue.js, useSendTextCursorPosition.js
 
 interface IRedactorState {
+   ChangeIsSaved: boolean;
    allowСhange: boolean;
    redactorValue: string;
    textCursorPosition: ICaretPosition;
@@ -187,9 +188,12 @@ interface IRedactorState {
    setCursorPosition: (x: number, y: number) => void;
    setTextCursorPosition: (x: number, y: number) => void;
    setAllowChange: (alowchange: boolean) => void;
+   setChangeIsSaved: (alowchange: boolean) => void;
 }
 
 export const useRedactor = create<IRedactorState>((set) => ({
+   //Флаг фиксациии несохранненных изменений
+   ChangeIsSaved: true,
    //Флаг разрещающий изменения состояния текста
    allowСhange: false,
    //Значение текстового редактора
@@ -201,6 +205,9 @@ export const useRedactor = create<IRedactorState>((set) => ({
    cursorPosition: {
       X: 0,
       Y: 0,
+   },
+   setChangeIsSaved: (ChangeIsSaved) => {
+      set({ ChangeIsSaved });
    },
    setAllowChange: (allowСhange) => {
       set({ allowСhange });

@@ -14,8 +14,6 @@ export default function useSendRedactorValue(socket: Socket) {
          redactorContent: redactorValue,
       };
 
-      if (allowСhange) {
-         socket.emit(URLS.redactorContentСhanged, params);
-      }
+      if (allowСhange) socket.emit(URLS.redactorContentСhanged, params);
    }, [redactorValue]);
 }

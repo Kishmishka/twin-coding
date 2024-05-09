@@ -17,6 +17,7 @@ import {
    IRedactorContent,
    IRoomParams,
    IUser,
+   IDisconnectParams,
 } from './interfaces.ts';
 
 const app = express();
@@ -84,8 +85,8 @@ io.on(URLS.connection, (socket) => {
          OnlineRoomStorage.getLanguage(room),
       );
       if (OnlineRoomStorage.getEmptySeats(room).length > 0) {
-         const params: Promise<IRoomParams> = db.getRoomParams(Number(room));
-         params.then(() => {
+         const roomParams: Promise<IRoomParams> = db.getRoomParams(Number(room));
+         roomParams.then((roomParams) => {
             const newUser = new User();
             newUser.seat = OnlineRoomStorage.takeSeat(room);
             newUser.color = COLORS[newUser.seat];
@@ -103,6 +104,11 @@ io.on(URLS.connection, (socket) => {
             OnlineRoomStorage.addCursor(room, newCursor);
 
             socket.join(room);
+
+            if (roomParams.editorContent !== '//good luck:)') {
+               OnlineRoomStorage.setEditorContent(room, roomParams.editorContent);
+               OnlineRoomStorage.setLanguage(room, roomParams.language);
+            }
 
             socket.emit(URLS.auth, {
                id: newUser.id,
@@ -177,45 +183,36 @@ io.on(URLS.connection, (socket) => {
 
    app.use(express.json());
 
-   app.post(URLS.disconnect, (req, _res) => {
-      if (req.body.id) {
-         OnlineRoomStorage.getUsers(req.body.room).forEach((user: IUser) => {
-            if (user.id === req.body.id) {
-               OnlineRoomStorage.freeSeats(req.body.room, user.seat);
+   socket.on(URLS.disconnect, (disconnectParams: IDisconnectParams) => {
+      if (disconnectParams.id) {
+         OnlineRoomStorage.getUsers(disconnectParams.room).forEach((user: IUser) => {
+            if (user.id === disconnectParams.id) {
+               OnlineRoomStorage.freeSeats(disconnectParams.room, user.seat);
                console.log(`${user.name} disconected`);
             }
          });
 
-         OnlineRoomStorage.deleteUser(req.body.room, req.body.id);
-         OnlineRoomStorage.deleteCaret(req.body.room, req.body.id);
-         OnlineRoomStorage.deleteCursor(req.body.room, req.body.id);
+         OnlineRoomStorage.deleteUser(disconnectParams.room, disconnectParams.id);
+         OnlineRoomStorage.deleteCaret(disconnectParams.room, disconnectParams.id);
+         OnlineRoomStorage.deleteCursor(disconnectParams.room, disconnectParams.id);
 
-         io.to(req.body.room).emit(URLS.clientDisconnect, {
-            users: OnlineRoomStorage.getUsers(req.body.room),
-            carets: OnlineRoomStorage.getCarets(req.body.room),
-            cursors: OnlineRoomStorage.getCursors(req.body.room),
+         io.to(disconnectParams.room).emit(URLS.clientDisconnect, {
+            users: OnlineRoomStorage.getUsers(disconnectParams.room),
+            carets: OnlineRoomStorage.getCarets(disconnectParams.room),
+            cursors: OnlineRoomStorage.getCursors(disconnectParams.room),
          });
-
-         if (OnlineRoomStorage.getUsers(req.body.room).length === 0) {
-            db.updateRoomParams({
-               id: Number(req.body.room),
-               language: OnlineRoomStorage.getLanguage(req.body.room),
-               editorContent: OnlineRoomStorage.getEditorContent(req.body.room),
-               seatsCount: 5,
-            });
-            console.log('content saved');
-         }
       }
    });
 
-   app.post(URLS.loadRoomParams, (req, _res) => {
-      const roomParams = db.getRoomParams(Number(req.body.room));
-      roomParams.then((roomParams) => {
-         io.to(req.body.room).emit(URLS.uploadedRoomParams, {
-            language: roomParams.language,
-            editorContent: roomParams.editorContent,
-         });
+   app.post(URLS.saveChange, (req, _res) => {
+      db.updateRoomParams({
+         id: Number(req.body.room),
+         language: OnlineRoomStorage.getLanguage(req.body.room),
+         editorContent: OnlineRoomStorage.getEditorContent(req.body.room),
+         seatsCount: 5,
       });
+      console.log('content saved');
+      io.to(req.body.room).emit(URLS.changeIsSaved);
    });
 });
 
