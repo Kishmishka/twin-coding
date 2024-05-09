@@ -105,10 +105,8 @@ io.on(URLS.connection, (socket) => {
 
             socket.join(room);
 
-            if (roomParams.editorContent !== '//good luck:)') {
-               OnlineRoomStorage.setEditorContent(room, roomParams.editorContent);
-               OnlineRoomStorage.setLanguage(room, roomParams.language);
-            }
+            OnlineRoomStorage.setEditorContent(room, roomParams.editorContent);
+            OnlineRoomStorage.setLanguage(room, roomParams.language);
 
             socket.emit(URLS.auth, {
                id: newUser.id,
@@ -209,7 +207,6 @@ io.on(URLS.connection, (socket) => {
          id: Number(req.body.room),
          language: OnlineRoomStorage.getLanguage(req.body.room),
          editorContent: OnlineRoomStorage.getEditorContent(req.body.room),
-         seatsCount: 5,
       });
       console.log('content saved');
       io.to(req.body.room).emit(URLS.changeIsSaved);

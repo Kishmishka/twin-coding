@@ -14,6 +14,7 @@ import {
 } from '../interfaces';
 
 export default function useGetServerValue(socket: Socket) {
+   const ChangeIsSaved = useRedactor((state) => state.ChangeIsSaved);
    const setId = useLog((state) => state.setId);
    const setName = useLog((state) => state.setName);
    const setRoom = useLog((state) => state.setRoom);
@@ -24,7 +25,6 @@ export default function useGetServerValue(socket: Socket) {
    const setRedactorValue = useRedactor((state) => state.setRedactorValue);
    const setAllowChange = useRedactor((state) => state.setAllowChange);
    const setLanguage = useSettingsRedactor((state) => state.setLanguage);
-   const ChangeIsSaved = useRedactor((state) => state.ChangeIsSaved);
    const setChangeIsSaved = useRedactor((state) => state.setChangeIsSaved);
    const [searchParams] = useSearchParams();
 
