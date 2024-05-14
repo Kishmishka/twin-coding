@@ -4,7 +4,7 @@ import Switch from '@mui/material/Switch';
 //Модернизированный свич из material-ui
 //Используется в компоненте SideBar.jsx
 interface SwitchProps {
-    blackTheme: boolean;
+    themeIsBlack: boolean;
 }
 
 const MySwitch = styled(Switch)((props: SwitchProps) => ({
@@ -26,12 +26,12 @@ const MySwitch = styled(Switch)((props: SwitchProps) => ({
             '& + .MuiSwitch-track': {
                 opacity: 4,
                 transition: '0.5s',
-                backgroundColor: props.blackTheme ? '#1E1E1E' : '#FFFFFF',
+                backgroundColor: props.themeIsBlack ? '#1E1E1E' : '#FFFFFF',
             },
         },
     },
     '& .MuiSwitch-thumb': {
-        backgroundColor: props.blackTheme ? '#242525' : '#242525',
+        backgroundColor: props.themeIsBlack ? '#242525' : '#242525',
         width: 32,
         height: 32,
         '&:before': {
@@ -51,7 +51,7 @@ const MySwitch = styled(Switch)((props: SwitchProps) => ({
     '& .MuiSwitch-track': {
         opacity: 4,
         transition: '0.5s',
-        backgroundColor: props.blackTheme ? '#F6529C' : '#F6F6F6',
+        backgroundColor: props.themeIsBlack ? '#F6F6F6' : '#F6F6F6',
         borderRadius: 20 / 2,
     },
 }));

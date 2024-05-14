@@ -11,5 +11,4 @@ model Room {
    id            Int    @id @default(autoincrement())
    language      String @default("Java")
    editorContent String @default("")
-   seatsCount    Int    @default(5)
 }
